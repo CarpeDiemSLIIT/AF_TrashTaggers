@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_URL = "http://admin-ayusha.com/api/admin/order/";
+const API_URL = "http://localhost:3001/api/admin/order/";
 
 const getAllPosts = async (token) => {
   const config = {

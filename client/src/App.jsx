@@ -47,7 +47,7 @@ function App() {
                 path="admin-dashboard"
                 element={
                   user ? (
-                    user.userData.role === "user" ? (
+                    user.userData.role === "admin" ? (
                       <AdminDashboard />
                     ) : (
                       <Navigate to="/" />

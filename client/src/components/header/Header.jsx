@@ -44,7 +44,7 @@ const Header = () => {
 
         {user ? (
           <>
-            {user.userData.role === "user" && (
+            {user.userData.role === "admin" && (
               <Button
                 variant="outlined"
                 onClick={() => {

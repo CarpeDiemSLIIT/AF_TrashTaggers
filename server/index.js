@@ -11,6 +11,7 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 // local imports
 import authRouter from "./routes/auth.js";
+import usersRouter from "./routes/users.js";
 
 /* configurations */
 dotenv.config();
@@ -56,6 +57,7 @@ const imageHandlingMiddleware = async (req, res, next) => {
 
 /* Routes */
 app.use("/api/auth", authRouter);
+app.use("/api/users", usersRouter);
 
 /* Mongoose setup */
 // eslint-disable-next-line no-undef
