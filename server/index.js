@@ -12,6 +12,12 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 // local imports
 import authRouter from "./routes/auth.js";
 import usersRouter from "./routes/users.js";
+import postsRouter from "./routes/posts.js";
+
+import { verifyTokenUser } from "./middleware/authUserToken.js";
+import { verifyTokenAdmin } from "./middleware/authAdminToken.js";
+
+import { addNewPost } from "./controllers/posts.js";
 
 /* configurations */
 dotenv.config();
@@ -44,20 +50,29 @@ const uploader = multer({
 
 const imageHandlingMiddleware = async (req, res, next) => {
   try {
-    const storageRef = ref(storage, `Ayusha/${req.file.originalname}`);
+    const storageRef = ref(storage, `TrashTaggers/${req.file.originalname}`);
     await uploadBytes(storageRef, req.file.buffer);
     req.body.imageURL = await getDownloadURL(
-      ref(storage, `Ayusha/${req.file.originalname}`)
+      ref(storage, `TrashTaggers/${req.file.originalname}`)
     );
     next();
   } catch (error) {
     res.status(500).json({ message: "Error uploading file", error });
   }
 };
+//routes with images
+app.post(
+  "/api/posts/add",
+  verifyTokenUser,
+  uploader.single("imageURL"),
+  imageHandlingMiddleware,
+  addNewPost
+);
 
 /* Routes */
 app.use("/api/auth", authRouter);
-app.use("/api/users", usersRouter);
+app.use("/api/users", verifyTokenAdmin, usersRouter);
+app.use("/api/posts", verifyTokenUser, postsRouter);
 
 /* Mongoose setup */
 // eslint-disable-next-line no-undef
