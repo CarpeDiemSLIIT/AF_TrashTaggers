@@ -17,6 +17,7 @@ import Register from "./pages/register";
 //admin dashboard
 import AdminDashboard from "./pages/adminDashboard";
 import UserManagement from "./pages/adminDashboard/userManagement";
+import SuspendedUsers from "./pages/adminDashboard/userManagement/suspendUser";
 import PostManagement from "./pages/adminDashboard/postManagement";
 import EventManagement from "./pages/adminDashboard/eventManagement";
 
@@ -58,6 +59,10 @@ function App() {
                 }
               >
                 <Route path="user-management" element={<UserManagement />} />
+                <Route
+                  path="user-management-suspend"
+                  element={<SuspendedUsers />}
+                />
                 <Route path="post-management" element={<PostManagement />} />
                 <Route path="event-management" element={<EventManagement />} />
               </Route>

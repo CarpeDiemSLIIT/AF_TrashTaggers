@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { reset, getAllUsers } from "../../../features/users/userSlice";
-
-import DoDisturbIcon from "@mui/icons-material/DoDisturb";
-
+import { reset, getAllSuspendUsers } from "../../../features/users/userSlice";
+import CheckIcon from "@mui/icons-material/Check";
 import {
   Avatar,
   Backdrop,
@@ -17,15 +15,13 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import ConfirmSuspend from "../../../components/confirmation";
-
-const UserManagement = () => {
-  const { allUsers, isLoading, isSuccess, message, isError } = useSelector(
-    (state) => state.users
-  );
+import ReActiveUser from "../../../components/confirmation/reActiveUser";
+const SuspendedUsers = () => {
+  const { allSuspendedUsers, isLoading, isSuccess, message, isError } =
+    useSelector((state) => state.users);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getAllUsers());
+    dispatch(getAllSuspendUsers());
     return () => {
       dispatch(reset());
     };
@@ -39,7 +35,7 @@ const UserManagement = () => {
     setOpen(false);
   };
 
-  const suspendUser = (id) => {
+  const reActiveUser = (id) => {
     setDeleteID(id);
   };
 
@@ -57,9 +53,8 @@ const UserManagement = () => {
   }
 
   return (
-
     <div>
-      <h1>Active Users</h1>
+      <h1>Suspended Users</h1>
 
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -72,42 +67,42 @@ const UserManagement = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {allUsers.length === 0 && (
+            {allSuspendedUsers.length === 0 && (
               <TableRow>
                 <TableCell colSpan={6} align="center">
                   No Users Found
                 </TableCell>
               </TableRow>
             )}
-            {allUsers.map((allUsers) => (
+            {allSuspendedUsers.map((allSuspendedUsers, index) => (
               <TableRow
-                key={allUsers._id}
+                key={allSuspendedUsers._id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row" align="center">
                   <Avatar
                     alt="User Image"
-                    src={allUsers.imageURL}
+                    src={allSuspendedUsers.imageURL}
                     sx={{ width: 56, height: 56, margin: "auto" }}
                   />
                 </TableCell>
                 <TableCell align="center">
-                  {allUsers.firstName} {allUsers.lastName}
+                  {allSuspendedUsers.firstName} {allSuspendedUsers.lastName}
                 </TableCell>
-                <TableCell align="center">{allUsers.email}</TableCell>
+                <TableCell align="center">{allSuspendedUsers.email}</TableCell>
                 <TableCell align="center">
                   <IconButton
                     aria-label="delete"
-                    color="error"
+                    color="primary"
                     title="Suspend"
                     onClick={() => {
                       setOpen(true);
-                      suspendUser(allUsers._id);
+                      reActiveUser(allSuspendedUsers._id);
                     }}
                   >
-                    <DoDisturbIcon />
+                    <CheckIcon />
                   </IconButton>
-                  <ConfirmSuspend
+                  <ReActiveUser
                     open={open}
                     handleClose={handleClose}
                     deleteId={deleteID}
@@ -119,8 +114,7 @@ const UserManagement = () => {
         </Table>
       </TableContainer>
     </div>
-
   );
 };
 
-export default UserManagement;
+export default SuspendedUsers;

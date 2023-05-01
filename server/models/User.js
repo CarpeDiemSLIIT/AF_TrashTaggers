@@ -15,6 +15,12 @@ const adminSchema = mongoose.Schema(
       min: 2,
       max: 50,
     },
+    status: {
+      type: String,
+      required: true,
+      default: "active",
+    },
+
     email: {
       type: String,
       required: true,
