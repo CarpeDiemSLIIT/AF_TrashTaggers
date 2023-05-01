@@ -24,8 +24,10 @@ export const addNewPost = async (req, res) => {
   });
   try {
     await newPost.save();
-
-    res.status(201).json(newPost);
+    const newPostWithPopulate = await Post.findById(newPost._id)
+      .populate("user")
+      .populate("comments");
+    res.status(201).json(newPostWithPopulate);
   } catch (error) {
     res.status(409).json({ message: error.message });
   }
