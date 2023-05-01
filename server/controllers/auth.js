@@ -43,6 +43,8 @@ export const login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ msg: "Invalid credentials. " });
 
+    // if (!user.status === "suspend")
+    //   return res.status(400).json({ msg: "User is suspended !" });
     // eslint-disable-next-line no-undef
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     res.status(200).json({ token, userData: user });

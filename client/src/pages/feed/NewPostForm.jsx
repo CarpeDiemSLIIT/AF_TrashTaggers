@@ -41,7 +41,7 @@ const NewPostForm = ({ handleClose }) => {
       dispatch(reset());
     };
   }, []);
-  const newCategory = async (values, onSubmitProps) => {
+  const newPost = async (values, onSubmitProps) => {
     const formData = new FormData();
     for (let value in values) {
       formData.append(value, values[value]);
@@ -55,7 +55,7 @@ const NewPostForm = ({ handleClose }) => {
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {
-    newCategory(values, onSubmitProps);
+    newPost(values, onSubmitProps);
   };
 
   return (
@@ -145,7 +145,7 @@ const NewPostForm = ({ handleClose }) => {
                 "&:hover": { color: palette.primary.main },
               }}
             >
-              Add new Category
+              Add new Post
             </Button>
           </Box>
         </form>

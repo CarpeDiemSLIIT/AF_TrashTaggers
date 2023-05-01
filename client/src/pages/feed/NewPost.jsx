@@ -12,11 +12,12 @@ import FlexBetween from "../../components/customMUI/FlexBetween";
 import { useDispatch, useSelector } from "react-redux";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CloseIcon from "@mui/icons-material/Close";
+import { useNavigate } from "react-router";
 import NewPostForm from "./NewPostForm.jsx";
 const NewPost = () => {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
   const handleClose = (event, reason) => {
@@ -29,6 +30,7 @@ const NewPost = () => {
       <FlexBetween
         sx={{ width: "100%", gap: "29px" }}
         onClick={() => {
+          if (!user) navigate("/login");
           setOpen(true);
         }}
       >

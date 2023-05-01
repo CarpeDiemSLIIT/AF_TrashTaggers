@@ -72,7 +72,7 @@ app.post(
 /* Routes */
 app.use("/api/auth", authRouter);
 app.use("/api/users", verifyTokenAdmin, usersRouter);
-app.use("/api/posts", verifyTokenUser, postsRouter);
+app.use("/api/posts", postsRouter);
 
 /* Mongoose setup */
 // eslint-disable-next-line no-undef
