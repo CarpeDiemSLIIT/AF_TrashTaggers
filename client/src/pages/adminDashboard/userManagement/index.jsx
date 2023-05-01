@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { reset, getAllUsers } from "../../../features/users/userSlice";
+import { Box, Typography } from "@mui/material";
 const UserManagement = () => {
   const { allUsers, isLoading, isSuccess, message, isError } = useSelector(
     (state) => state.users
@@ -15,10 +16,10 @@ const UserManagement = () => {
 
   console.log(allUsers);
   return (
-    <div>
+    <Box>
       UserManagement
-      <p>{JSON.stringify(allUsers)}</p>
-    </div>
+      <Typography>{JSON.stringify(allUsers)}</Typography>
+    </Box>
   );
 };
 

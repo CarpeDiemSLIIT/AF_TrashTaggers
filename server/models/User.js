@@ -48,18 +48,18 @@ const adminSchema = mongoose.Schema(
         type: String,
       },
     ],
-    posts: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Post",
-      },
-    ],
-    events: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Event",
-      },
-    ],
+    // posts: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Post",
+    //   },
+    // ],
+    // events: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Event",
+    //   },
+    // ],
     friends: {
       type: Array,
       default: [],
