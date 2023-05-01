@@ -21,7 +21,7 @@ const LoginPage = () => {
       <Grid container>
         <Grid item xs={8}>
           <Box
-            marginTop="3%"
+            marginTop="1%"
             marginLeft="2%"
             component="img"
             width={isNonMobileScreens ? "100%" : "93%"}
