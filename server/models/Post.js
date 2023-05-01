@@ -1,15 +1,11 @@
 import mongoose from "mongoose";
 //TODO not done
 const PostSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
   description: {
     type: String,
     required: true,
   },
-  image: {
+  imageURL: {
     type: String,
     required: true,
   },
@@ -22,18 +18,14 @@ const PostSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  upvotes: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ],
-  downvotes: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ],
+  upVotes: {
+    type: Map,
+    of: Boolean,
+  },
+  downVotes: {
+    type: Map,
+    of: Boolean,
+  },
   comments: [
     {
       type: mongoose.Schema.Types.ObjectId,

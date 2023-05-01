@@ -1,16 +1,22 @@
 import axios from "axios";
-const API_URL = "http://localhost:3001/api/admin/order/";
+const API_URL = "http://localhost:3001/api/posts/";
 
-const getAllPosts = async (token) => {
+const getAllPosts = async () => {
+  const response = await axios.get(API_URL + "all");
+  return response.data;
+};
+
+const addNewPost = async (post, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
-  const response = await axios.get(API_URL + "get/all", config);
+  const response = await axios.post(API_URL + "add", post, config);
   return response.data;
 };
 
 export default {
   getAllPosts,
+  addNewPost,
 };

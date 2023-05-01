@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { reset, getAllUsers } from "../../../features/users/userSlice";
+
 import DoDisturbIcon from "@mui/icons-material/DoDisturb";
 
 import {
@@ -17,6 +18,7 @@ import {
   TableRow,
 } from "@mui/material";
 import ConfirmSuspend from "../../../components/confirmation";
+
 const UserManagement = () => {
   const { allUsers, isLoading, isSuccess, message, isError } = useSelector(
     (state) => state.users
@@ -55,6 +57,7 @@ const UserManagement = () => {
   }
 
   return (
+
     <div>
       <h1>Active Users</h1>
 
@@ -116,6 +119,7 @@ const UserManagement = () => {
         </Table>
       </TableContainer>
     </div>
+
   );
 };
 

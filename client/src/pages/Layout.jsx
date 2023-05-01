@@ -25,10 +25,8 @@ const Dashboard = () => {
             <UserSidebar />
           )}
         </Box>
-        <Box flexBasis="80%">
-          <WidgetWrapper>
-            <Outlet />
-          </WidgetWrapper>
+        <Box flexBasis="80%" maxWidth="80%">
+          <Outlet />
         </Box>
       </Box>
     </Box>
