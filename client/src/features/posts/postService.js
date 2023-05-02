@@ -16,7 +16,30 @@ const addNewPost = async (post, token) => {
   return response.data;
 };
 
+const upVotePost = async (id, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.patch(API_URL + `${id}/upvote`, {}, config);
+  console.log(response.data);
+  return response.data;
+};
+const downVotePost = async (id, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.patch(API_URL + `${id}/downvote`, {}, config);
+  console.log(response.data);
+  return response.data;
+};
+
 export default {
   getAllPosts,
   addNewPost,
+  upVotePost,
+  downVotePost,
 };

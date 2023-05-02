@@ -35,12 +35,6 @@ const NewPostForm = ({ handleClose }) => {
     (state) => state.post
   );
 
-  useEffect(() => {
-    dispatch(reset());
-    return () => {
-      dispatch(reset());
-    };
-  }, []);
   const newPost = async (values, onSubmitProps) => {
     const formData = new FormData();
     for (let value in values) {

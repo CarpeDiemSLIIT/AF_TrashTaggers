@@ -43,30 +43,52 @@ export const addNewPost = createAsyncThunk(
   }
 );
 
-// export const approvepost = createAsyncThunk(
-//   "post/approvepost",
-//   async (id, thunkAPI) => {
-//     try {
-//       const token = thunkAPI.getState().auth.user.token;
-//       return await postService.changepostStatus(id, "approved", token);
-//     } catch (error) {
-//       const message =
-//         (error.response &&
-//           error.response.data &&
-//           error.response.data.message) ||
-//         error.message ||
-//         error.toString();
-//       return thunkAPI.rejectWithValue(message);
-//     }
-//   }
-// );
+export const upVotePost = createAsyncThunk(
+  "post/upVotePost",
+  async (id, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await postService.upVotePost(id, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const downVotePost = createAsyncThunk(
+  "post/upVotePost",
+  async (id, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await postService.downVotePost(id, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 const postSlice = createSlice({
   name: "post",
   initialState,
   reducers: {
     reset: (state) => {
-      state = initialState;
+      state = {
+        isError: false,
+        isSuccess: false,
+        isLoading: false,
+        message: "",
+      };
     },
   },
   extraReducers: (builder) => {
@@ -93,6 +115,22 @@ const postSlice = createSlice({
         state.posts.push(action.payload);
       })
       .addCase(addNewPost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(upVotePost.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(upVotePost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        console.log(action.payload);
+        state.posts = state.posts.map((post) =>
+          post._id === action.payload._id ? action.payload : post
+        );
+      })
+      .addCase(upVotePost.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

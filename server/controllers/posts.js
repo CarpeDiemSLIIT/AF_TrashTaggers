@@ -4,7 +4,7 @@ import Comment from "../models/Comment.js";
 
 export const getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find().populate("user").populate("comments");
+    const posts = await Post.find().populate("author").populate("comments");
     res.status(200).json(posts);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -20,12 +20,12 @@ export const addNewPost = async (req, res) => {
   const newPost = new Post({
     description,
     imageURL,
-    user: _id,
+    author: _id,
   });
   try {
     await newPost.save();
     const newPostWithPopulate = await Post.findById(newPost._id)
-      .populate("user")
+      .populate("author")
       .populate("comments");
     res.status(201).json(newPostWithPopulate);
   } catch (error) {

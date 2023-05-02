@@ -9,7 +9,7 @@ const PostSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  user: {
+  author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
@@ -18,20 +18,26 @@ const PostSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  upVotes: {
-    type: Map,
-    of: Boolean,
-  },
-  downVotes: {
-    type: Map,
-    of: Boolean,
-  },
-  comments: [
+  upVotes: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Comment",
+      ref: "User",
     },
   ],
+  downVotes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  netVotes: {
+    type: Number,
+    default: 0,
+  },
+  comments: {
+    type: Array,
+    default: [],
+  },
 });
 
 const Post = mongoose.model("Post", PostSchema);

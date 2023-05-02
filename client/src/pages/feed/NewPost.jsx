@@ -7,18 +7,23 @@ import {
   IconButton,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FlexBetween from "../../components/customMUI/FlexBetween";
 import { useDispatch, useSelector } from "react-redux";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router";
 import NewPostForm from "./NewPostForm.jsx";
+import { reset } from "../../features/posts/postSlice";
 const NewPost = () => {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    dispatch(reset());
+  }, []);
 
   const handleClose = (event, reason) => {
     // if (reason && reason == "backdropClick") return;

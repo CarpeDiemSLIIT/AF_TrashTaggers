@@ -1,5 +1,5 @@
 import { DarkMode, LightMode, Notifications } from "@mui/icons-material";
-import { Avatar, Box, Button, IconButton, useTheme } from "@mui/material";
+import { Box, Button, IconButton, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, logout } from "../../features/auth/authSlice";
 import logo from "../../assets/ayusha.svg";
@@ -90,53 +90,3 @@ const Header = () => {
 };
 
 export default Header;
-
-// function Profile() {
-//   const dispatch = useDispatch();
-//   const user = useSelector((state) => state.auth.user.userData);
-//   console.log(user);
-//   const [anchorEl, setAnchorEl] = useState(null);
-//   const open = Boolean(anchorEl);
-//   const handleClick = (event) => {
-//     setAnchorEl(event.currentTarget);
-//   };
-//   const handleClose = () => {
-//     setAnchorEl(null);
-//   };
-//   return (
-//     <>
-//       <IconButton
-//         id="basic-button"
-//         aria-controls={open ? "basic-menu" : undefined}
-//         aria-haspopup="true"
-//         aria-expanded={open ? "true" : undefined}
-//         onClick={handleClick}
-//       >
-//         <Avatar
-//           alt={user.firstName}
-//           src={user.ImageURL ? user.ImageURL : ""}
-//           // src="/static/images/avatar/1.jpg"
-//           // sx={{ width: 56, height: 56 }}
-//         />
-//       </IconButton>
-//       {user.firstName}
-//       <Menu
-//         id="basic-menu"
-//         anchorEl={anchorEl}
-//         open={open}
-//         onClose={handleClose}
-//         MenuListProps={{
-//           "aria-labelledby": "basic-button",
-//         }}
-//       >
-//         <MenuItem
-//           onClick={() => {
-//             dispatch(logout());
-//           }}
-//         >
-//           Logout
-//         </MenuItem>
-//       </Menu>
-//     </>
-//   );
-// }

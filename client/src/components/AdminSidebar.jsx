@@ -46,7 +46,6 @@ export default function AdminSidebar() {
         url="admin-dashboard/user-management-suspend"
       />
       <Divider />
-      <Divider />
       <Selection
         name="Event Management"
         url="admin-dashboard/event-management"

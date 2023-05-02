@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import NewPost from "./NewPost";
 import { Backdrop, Box, CircularProgress, Typography } from "@mui/material";
 import WidgetWrapper from "../../components/customMUI/WidgetWrapper";
-import { getAllPosts } from "../../features/posts/postSlice";
+import { getAllPosts, reset } from "../../features/posts/postSlice";
 import { useSelector, useDispatch } from "react-redux";
-import Post from "./Post";
+import Post from "../../components/Posts/Post";
 
 const Feed = () => {
   const dispatch = useDispatch();
@@ -13,26 +13,26 @@ const Feed = () => {
   );
   useEffect(() => {
     dispatch(getAllPosts());
+    return () => {
+      reset();
+    };
   }, []);
-  if (isLoading)
-    return (
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={true}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    );
+  // if (isLoading)
+  //   return (
+  //     <Backdrop
+  //       sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+  //       open={true}
+  //     >
+  //       <CircularProgress color="inherit" />
+  //     </Backdrop>
+  //   );
   return (
     <Box display="flex" flexDirection="column" gap="1rem">
       <WidgetWrapper>
         <NewPost />
       </WidgetWrapper>
-      {posts.map((post) => (
-        <WidgetWrapper key={post._id}>
-          <Post post={post} />
-        </WidgetWrapper>
-      ))}
+      {posts.length > 0 &&
+        posts.map((post) => <Post post={post} key={post._id} />)}
     </Box>
   );
 };
