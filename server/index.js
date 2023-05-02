@@ -13,6 +13,8 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import authRouter from "./routes/auth.js";
 import usersRouter from "./routes/users.js";
 import postsRouter from "./routes/posts.js";
+import event_router from "./routes/events.js";
+
 
 import { verifyTokenUser } from "./middleware/authUserToken.js";
 import { verifyTokenAdmin } from "./middleware/authAdminToken.js";
@@ -73,6 +75,7 @@ app.post(
 app.use("/api/auth", authRouter);
 app.use("/api/users", verifyTokenAdmin, usersRouter);
 app.use("/api/posts", verifyTokenUser, postsRouter);
+app.use("/api/events", verifyTokenUser, event_router);
 
 /* Mongoose setup */
 // eslint-disable-next-line no-undef
