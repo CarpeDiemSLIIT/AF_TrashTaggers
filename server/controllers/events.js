@@ -29,3 +29,5 @@ export const getAllEvents = async (req, res) => {
     }
   };
   
+
+  //TODO : edit events , delete events , get events by id

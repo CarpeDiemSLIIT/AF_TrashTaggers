@@ -14,6 +14,7 @@ import authRouter from "./routes/auth.js";
 import usersRouter from "./routes/users.js";
 import postsRouter from "./routes/posts.js";
 import event_router from "./routes/events.js";
+import cmpevent_router from "./routes/compevents.js";
 
 
 import { verifyTokenUser } from "./middleware/authUserToken.js";
@@ -76,6 +77,8 @@ app.use("/api/auth", authRouter);
 app.use("/api/users", verifyTokenAdmin, usersRouter);
 app.use("/api/posts", verifyTokenUser, postsRouter);
 app.use("/api/events", verifyTokenUser, event_router);
+app.use("/api/compevents", verifyTokenUser, cmpevent_router);
+
 
 /* Mongoose setup */
 // eslint-disable-next-line no-undef

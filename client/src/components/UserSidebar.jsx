@@ -35,6 +35,10 @@ export default function Sidebar() {
       <Selection name="Feed" url="" />
       <Divider />
       <Selection name="Events" url="events" />
+      <Divider />
+      <Selection name="Join" url="join" />
+      <Divider />
+      <Selection name=" My Events" url="myevents" />
     </Box>
   );
 }

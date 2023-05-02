@@ -1,7 +1,22 @@
+import { Box, Button } from "@mui/material";
 import React from "react";
 
 const Event = () => {
-  return <div>Event</div>;
+
+//TODO : Get event Data and map down
+
+
+
+
+  return(
+    
+  <div>
+
+    <Box><center><Button> Add Event</Button></center></Box>
+    <br />
+    <hr/>
+    Event</div>
+  ); 
 };
 
 export default Event;

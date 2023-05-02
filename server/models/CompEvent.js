@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const EventSchema = new mongoose.Schema({
+const CompEventSchema = new mongoose.Schema({
 
     Title: {
         type: String,
@@ -25,9 +25,13 @@ const EventSchema = new mongoose.Schema({
     default: [],
   }],
 
-  
+  imageURL: {
+    type: String,
+    required: true,
+  },
+
 });
 
-const Event = mongoose.model("Event", EventSchema);
+const CompEvent = mongoose.model("Completed_Events", CompEventSchema);
 
-export default Event;
+export default CompEvent;
