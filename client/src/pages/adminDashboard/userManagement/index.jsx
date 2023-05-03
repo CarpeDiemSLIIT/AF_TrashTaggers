@@ -7,6 +7,7 @@ import DoDisturbIcon from "@mui/icons-material/DoDisturb";
 import {
   Avatar,
   Backdrop,
+  Box,
   CircularProgress,
   IconButton,
   Paper,
@@ -16,6 +17,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
 } from "@mui/material";
 import ConfirmSuspend from "../../../components/confirmation";
 
@@ -23,6 +25,10 @@ const UserManagement = () => {
   const { allUsers, isLoading, isSuccess, message, isError } = useSelector(
     (state) => state.users
   );
+
+  const [search, setSearch] = useState("");
+
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllUsers());
@@ -57,9 +63,24 @@ const UserManagement = () => {
   }
 
   return (
-
     <div>
       <h1>Active Users</h1>
+      <Box sx={{ gridColumn: "span 4" }}>
+        <TextField
+          fullWidth
+          label="Search...."
+          onChange={(e) => setSearch(e.target.value)}
+          id="fullWidth"
+          InputProps={{
+            style: {
+              textAlign: "center",
+              borderRadius: "10px",
+              marginBottom: "10px",
+              marginTop: "10px",
+            },
+          }}
+        />
+      </Box>
 
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -79,47 +100,53 @@ const UserManagement = () => {
                 </TableCell>
               </TableRow>
             )}
-            {allUsers.map((allUsers) => (
-              <TableRow
-                key={allUsers._id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row" align="center">
-                  <Avatar
-                    alt="User Image"
-                    src={allUsers.imageURL}
-                    sx={{ width: 56, height: 56, margin: "auto" }}
-                  />
-                </TableCell>
-                <TableCell align="center">
-                  {allUsers.firstName} {allUsers.lastName}
-                </TableCell>
-                <TableCell align="center">{allUsers.email}</TableCell>
-                <TableCell align="center">
-                  <IconButton
-                    aria-label="delete"
-                    color="error"
-                    title="Suspend"
-                    onClick={() => {
-                      setOpen(true);
-                      suspendUser(allUsers._id);
-                    }}
-                  >
-                    <DoDisturbIcon />
-                  </IconButton>
-                  <ConfirmSuspend
-                    open={open}
-                    handleClose={handleClose}
-                    deleteId={deleteID}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
+            {allUsers
+              .filter((user) => {
+                name = user.firstName + user.lastName;
+                return search.toLowerCase() === ""
+                  ? user
+                  : name.toLowerCase().includes(search);
+              })
+              .map((allUsers) => (
+                <TableRow
+                  key={allUsers._id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row" align="center">
+                    <Avatar
+                      alt="User Image"
+                      src={allUsers.imageURL}
+                      sx={{ width: 56, height: 56, margin: "auto" }}
+                    />
+                  </TableCell>
+                  <TableCell align="center">
+                    {allUsers.firstName} {allUsers.lastName}
+                  </TableCell>
+                  <TableCell align="center">{allUsers.email}</TableCell>
+                  <TableCell align="center">
+                    <IconButton
+                      aria-label="delete"
+                      color="error"
+                      title="Suspend"
+                      onClick={() => {
+                        setOpen(true);
+                        suspendUser(allUsers._id);
+                      }}
+                    >
+                      <DoDisturbIcon />
+                    </IconButton>
+                    <ConfirmSuspend
+                      open={open}
+                      handleClose={handleClose}
+                      deleteId={deleteID}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
     </div>
-
   );
 };
 

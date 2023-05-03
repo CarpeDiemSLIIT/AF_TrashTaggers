@@ -5,6 +5,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import {
   Avatar,
   Backdrop,
+  Box,
   CircularProgress,
   IconButton,
   Paper,
@@ -14,11 +15,13 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
 } from "@mui/material";
 import ReActiveUser from "../../../components/confirmation/reActiveUser";
 const SuspendedUsers = () => {
   const { allSuspendedUsers, isLoading, isSuccess, message, isError } =
     useSelector((state) => state.users);
+  const [search, setSearch] = useState("");
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllSuspendUsers());
@@ -55,6 +58,22 @@ const SuspendedUsers = () => {
   return (
     <div>
       <h1>Suspended Users</h1>
+      <Box sx={{ gridColumn: "span 4" }}>
+        <TextField
+          fullWidth
+          label="Search...."
+          onChange={(e) => setSearch(e.target.value)}
+          id="fullWidth"
+          InputProps={{
+            style: {
+              textAlign: "center",
+              borderRadius: "10px",
+              marginBottom: "10px",
+              marginTop: "10px",
+            },
+          }}
+        />
+      </Box>
 
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -74,42 +93,51 @@ const SuspendedUsers = () => {
                 </TableCell>
               </TableRow>
             )}
-            {allSuspendedUsers.map((allSuspendedUsers, index) => (
-              <TableRow
-                key={allSuspendedUsers._id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row" align="center">
-                  <Avatar
-                    alt="User Image"
-                    src={allSuspendedUsers.imageURL}
-                    sx={{ width: 56, height: 56, margin: "auto" }}
-                  />
-                </TableCell>
-                <TableCell align="center">
-                  {allSuspendedUsers.firstName} {allSuspendedUsers.lastName}
-                </TableCell>
-                <TableCell align="center">{allSuspendedUsers.email}</TableCell>
-                <TableCell align="center">
-                  <IconButton
-                    aria-label="delete"
-                    color="primary"
-                    title="Suspend"
-                    onClick={() => {
-                      setOpen(true);
-                      reActiveUser(allSuspendedUsers._id);
-                    }}
-                  >
-                    <CheckIcon />
-                  </IconButton>
-                  <ReActiveUser
-                    open={open}
-                    handleClose={handleClose}
-                    deleteId={deleteID}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
+            {allSuspendedUsers
+              .filter((user) => {
+                name = user.firstName + user.lastName;
+                return search.toLowerCase() === ""
+                  ? user
+                  : name.toLowerCase().includes(search);
+              })
+              .map((allSuspendedUsers, index) => (
+                <TableRow
+                  key={allSuspendedUsers._id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row" align="center">
+                    <Avatar
+                      alt="User Image"
+                      src={allSuspendedUsers.imageURL}
+                      sx={{ width: 56, height: 56, margin: "auto" }}
+                    />
+                  </TableCell>
+                  <TableCell align="center">
+                    {allSuspendedUsers.firstName} {allSuspendedUsers.lastName}
+                  </TableCell>
+                  <TableCell align="center">
+                    {allSuspendedUsers.email}
+                  </TableCell>
+                  <TableCell align="center">
+                    <IconButton
+                      aria-label="delete"
+                      color="primary"
+                      title="Suspend"
+                      onClick={() => {
+                        setOpen(true);
+                        reActiveUser(allSuspendedUsers._id);
+                      }}
+                    >
+                      <CheckIcon />
+                    </IconButton>
+                    <ReActiveUser
+                      open={open}
+                      handleClose={handleClose}
+                      deleteId={deleteID}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
