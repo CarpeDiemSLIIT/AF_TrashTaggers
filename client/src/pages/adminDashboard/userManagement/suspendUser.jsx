@@ -122,7 +122,7 @@ const SuspendedUsers = () => {
                     <IconButton
                       aria-label="delete"
                       color="primary"
-                      title="Suspend"
+                      title="Re-Active"
                       onClick={() => {
                         setOpen(true);
                         reActiveUser(allSuspendedUsers._id);

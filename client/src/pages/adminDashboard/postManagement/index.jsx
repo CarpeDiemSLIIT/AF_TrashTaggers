@@ -5,6 +5,7 @@ import {
   Chip,
   CircularProgress,
   Snackbar,
+  TextField,
   makeStyles,
 } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -112,7 +113,7 @@ function Row({ post, index }) {
           colSpan={6}
         ></TableCell>
       </TableRow>
-      <TableRow>
+      <TableRow key={post.description}>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
@@ -217,7 +218,7 @@ const PostManagement = () => {
   const { posts, isLoading, isError } = useSelector((state) => state.post);
 
   const dispatch = useDispatch();
-
+  const [search, setSearch] = useState("");
   useEffect(() => {
     dispatch(getAllPosts());
   }, []);
@@ -235,6 +236,22 @@ const PostManagement = () => {
   return (
     <div>
       <h1>All Posts</h1>
+      <Box sx={{ gridColumn: "span 4" }}>
+        <TextField
+          fullWidth
+          label="Search...."
+          onChange={(e) => setSearch(e.target.value)}
+          id="fullWidth"
+          InputProps={{
+            style: {
+              textAlign: "center",
+              borderRadius: "10px",
+              marginBottom: "10px",
+              marginTop: "10px",
+            },
+          }}
+        />
+      </Box>
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
           <TableHead>
@@ -248,15 +265,21 @@ const PostManagement = () => {
           </TableHead>
           <TableBody>
             {posts.length === 0 && (
-              <TableRow>
+              <TableRow key={posts._id}>
                 <TableCell colSpan={6} align="center">
                   No Posts Found
                 </TableCell>
               </TableRow>
             )}
-            {posts.map((post, index) => (
-              <Row key={post._id} post={post} index={index} />
-            ))}
+            {posts
+              .filter((post) => {
+                return search.toLowerCase() === ""
+                  ? post
+                  : post.description.toLowerCase().includes(search);
+              })
+              .map((post, index) => (
+                <Row key={post._id} post={post} index={index} />
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
