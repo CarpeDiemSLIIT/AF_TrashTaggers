@@ -10,6 +10,16 @@ export const getAll = async (req, res) => {
   }
 };
 
+//display all active users with admin
+export const getAllWithAdmin = async (req, res) => {
+  try {
+    const users = await User.find({ status: "active" });
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 //display all suspended users
 export const getSuspendAll = async (req, res) => {
   try {

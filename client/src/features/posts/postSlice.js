@@ -27,10 +27,46 @@ export const getAllPosts = createAsyncThunk(
 );
 export const addNewPost = createAsyncThunk(
   "post/addNewPost",
-  async (post, thunkAPI) => {
+  async (postId, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
-      return await postService.addNewPost(post, token);
+      return await postService.addNewPost(token, postId);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const approveNewPost = createAsyncThunk(
+  "post/approveNewPost",
+  async (postId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await postService.approveNewPost(postId, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const rejectNewPost = createAsyncThunk(
+  "post/rejectNewPost",
+  async (postId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await postService.rejectNewPost(postId, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -93,6 +129,32 @@ const postSlice = createSlice({
         state.posts.push(action.payload);
       })
       .addCase(addNewPost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(approveNewPost.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(approveNewPost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.posts = action.payload;
+      })
+      .addCase(approveNewPost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(rejectNewPost.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(rejectNewPost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.posts = action.payload;
+      })
+      .addCase(rejectNewPost.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

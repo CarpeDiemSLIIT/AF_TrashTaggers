@@ -11,6 +11,16 @@ const getAllUsers = async (token) => {
   return response.data;
 };
 
+const getAllUsersWithAdmin = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.get(API_URL + "allWithAdmin", config);
+  return response.data;
+};
+
 const getAllSuspendedUsers = async (token) => {
   const config = {
     headers: {
@@ -54,4 +64,5 @@ export default {
   getAllSuspendedUsers,
   suspendUsers,
   reActiveUsers,
+  getAllUsersWithAdmin,
 };

@@ -16,7 +16,29 @@ const addNewPost = async (post, token) => {
   return response.data;
 };
 
+const approveNewPost = async (postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.patch(API_URL + `approve/${postId}`, {}, config);
+  return response.data;
+};
+
+const rejectNewPost = async (postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.patch(API_URL + `reject/${postId}`, {}, config);
+  return response.data;
+};
+
 export default {
   getAllPosts,
   addNewPost,
+  approveNewPost,
+  rejectNewPost,
 };

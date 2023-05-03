@@ -17,7 +17,7 @@ import postsRouter from "./routes/posts.js";
 import { verifyTokenUser } from "./middleware/authUserToken.js";
 import { verifyTokenAdmin } from "./middleware/authAdminToken.js";
 
-import { addNewPost } from "./controllers/posts.js";
+import { addNewPost, approvePost, rejectPost } from "./controllers/posts.js";
 
 /* configurations */
 dotenv.config();
@@ -73,6 +73,12 @@ app.post(
 app.use("/api/auth", authRouter);
 app.use("/api/users", verifyTokenAdmin, usersRouter);
 app.use("/api/posts", postsRouter);
+
+//route to approve a post
+app.patch("/api/posts/approve/:id", verifyTokenAdmin, approvePost);
+
+//route to reject a post
+app.patch("/api/posts/reject/:id", verifyTokenAdmin, rejectPost);
 
 /* Mongoose setup */
 // eslint-disable-next-line no-undef

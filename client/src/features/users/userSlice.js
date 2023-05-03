@@ -4,6 +4,7 @@ import userService from "./userService";
 const initialState = {
   allUsers: [],
   allSuspendedUsers: [],
+  allUsersWithAdmin: [],
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -17,6 +18,25 @@ export const getAllUsers = createAsyncThunk(
     try {
       const token = thunkAPI.getState().auth.user.token;
       return await userService.getAllUsers(token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+//get all users with admin
+export const getAllUsersWithAdmin = createAsyncThunk(
+  "users/getAllUsersWithAdmin",
+  async (_, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await userService.getAllUsersWithAdmin(token);
     } catch (error) {
       const message =
         (error.response &&
@@ -105,6 +125,19 @@ const userSlice = createSlice({
         state.allUsers = action.payload;
       })
       .addCase(getAllUsers.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getAllUsersWithAdmin.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getAllUsersWithAdmin.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.allUsersWithAdmin = action.payload;
+      })
+      .addCase(getAllUsersWithAdmin.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

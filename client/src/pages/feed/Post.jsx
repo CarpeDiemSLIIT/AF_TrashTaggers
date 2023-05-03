@@ -12,7 +12,7 @@ const Post = ({ post }) => {
     <Box sx={{ display: "flex", flexDirection: " column" }}>
       <Box sx={{ flex: 1 }}>
         <Typography variant="h4">
-          {post.user.firstName} {post.user.lastName}
+          {post.author.firstName} {post.author.lastName}
         </Typography>
       </Box>
       <Box sx={{ flex: 1 }}>
