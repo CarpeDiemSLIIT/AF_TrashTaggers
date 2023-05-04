@@ -21,7 +21,37 @@ const addNewEvent = async (event, token) => {
   return response.data;
 };
 
+
+const deleteEvent = async (eventId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const response = await axios.delete(API_URL + eventId, config)
+
+  return response.data
+}
+
+
+const updateEvent= async (EventData, token) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  console.log(JSON.stringify(EventData));
+    const response = await axios.put(API_URL + EventData._id,EventData, config)
+    console.log(JSON.stringify(response));
+  
+    return response.data
+  }
+
+
 export default {
     getAllEvents,
     addNewEvent,
+    deleteEvent,
+    updateEvent,
 };
