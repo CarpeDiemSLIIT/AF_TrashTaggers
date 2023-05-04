@@ -17,7 +17,12 @@ import postsRouter from "./routes/posts.js";
 import { verifyTokenUser } from "./middleware/authUserToken.js";
 import { verifyTokenAdmin } from "./middleware/authAdminToken.js";
 
-import { addNewPost, approvePost, rejectPost } from "./controllers/posts.js";
+import {
+  addNewComment,
+  addNewPost,
+  approvePost,
+  rejectPost,
+} from "./controllers/posts.js";
 
 /* configurations */
 dotenv.config();
@@ -64,10 +69,14 @@ const imageHandlingMiddleware = async (req, res, next) => {
 app.post(
   "/api/posts/add",
   verifyTokenUser,
+  verifyTokenAdmin,
   uploader.single("imageURL"),
   imageHandlingMiddleware,
   addNewPost
 );
+app.use(bodyParser.urlencoded({ extended: true }));
+app.post("/api/posts/comment/:pid", verifyTokenAdmin, addNewComment);
+app.post("/api/posts/comment/:pid", verifyTokenUser, addNewComment);
 
 /* Routes */
 app.use("/api/auth", authRouter);

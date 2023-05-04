@@ -36,9 +36,25 @@ const rejectNewPost = async (postId, token) => {
   return response.data;
 };
 
+const addNewComment = async (comment, postID, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.post(
+    API_URL + `comment/${postID}`,
+    { comment },
+    config
+  );
+  return response.data;
+};
+
 export default {
   getAllPosts,
   addNewPost,
   approveNewPost,
   rejectNewPost,
+  addNewComment,
 };

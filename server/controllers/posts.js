@@ -56,3 +56,27 @@ export const rejectPost = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+//approve a post
+export const addNewComment = async (req, res) => {
+  const { _id } = req.user;
+  const { pid } = req.params;
+  const { comment } = req.body;
+
+  const newComment = new Comment({
+    user: _id,
+    comment: comment,
+  });
+  try {
+    const newComments = await newComment.save();
+    const currentPost = await Post.findByIdAndUpdate(pid, {
+      $push: { comments: newComments._id },
+    });
+
+    const allMyComment = await Post.find().populate("comments");
+
+    res.status(200).json(allMyComment);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

@@ -8,9 +8,9 @@ import Post from "./Post";
 
 const Feed = () => {
   const dispatch = useDispatch();
-  const { posts, isError, message, isSuccess, isLoading } = useSelector(
-    (state) => state.post
-  );
+  const { posts, comments, isError, message, isSuccess, isLoading } =
+    useSelector((state) => state.post);
+
   useEffect(() => {
     dispatch(getAllPosts());
   }, []);

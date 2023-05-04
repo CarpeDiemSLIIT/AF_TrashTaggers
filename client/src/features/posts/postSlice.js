@@ -43,6 +43,28 @@ export const addNewPost = createAsyncThunk(
   }
 );
 
+//add comment
+export const addNewComment = createAsyncThunk(
+  "post/addNewComment",
+  async (comment, thunkAPI) => {
+    try {
+      const myComment = comment.comment;
+      const postID = comment.postID;
+      const token = thunkAPI.getState().auth.user.token;
+      console.log(token);
+      return await postService.addNewComment(myComment, postID, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const approveNewPost = createAsyncThunk(
   "post/approveNewPost",
   async (postId, thunkAPI) => {
@@ -129,6 +151,19 @@ const postSlice = createSlice({
         state.posts.push(action.payload);
       })
       .addCase(addNewPost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(addNewComment.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addNewComment.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.posts = action.payload;
+      })
+      .addCase(addNewComment.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
