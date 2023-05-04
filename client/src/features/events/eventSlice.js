@@ -47,7 +47,7 @@ const initialState = {
 
 
   const eventSlice = createSlice({
-    name: "event",
+    name: "events",
     initialState,
     reducers: {
       reset: (state) => {

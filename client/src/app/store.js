@@ -3,6 +3,7 @@ import authReducer from "../features/auth/authSlice";
 import postReducer from "../features/posts/postSlice";
 import userReducer from "../features/users/userSlice";
 import eventReducer from "../features/events/eventSlice";
+import ceventReducer from "../features/cevents/ceventSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     post: postReducer,
     users: userReducer,
     event : eventReducer,
+    cevent : ceventReducer,
     
   },
 });
