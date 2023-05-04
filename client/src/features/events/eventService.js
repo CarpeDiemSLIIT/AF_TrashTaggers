@@ -17,7 +17,7 @@ const addNewEvent = async (event, token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  const response = await axios.post(API_URL + "add", event, config);
+  const response = await axios.post(API_URL + "new", event, config);
   return response.data;
 };
 

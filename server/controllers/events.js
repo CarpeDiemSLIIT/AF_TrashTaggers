@@ -11,14 +11,14 @@ export const getAllEvents = async (req, res) => {
   };
 
   export const addNewEvent = async (req, res) => {
-    const { description, title } = req.body;
+    const { description, Title } = req.body;
     const { _id } = req.user;
-    if (!description || !title)
+    if (!description || !Title)
       return res.status(400).json({ message: "Missing required fields" });
   
     const newEvent = new Event({
       description,
-      title,
+      Title,
       user: _id,
     });
     try {
@@ -32,4 +32,31 @@ export const getAllEvents = async (req, res) => {
 
   //TODO : edit events , delete events , get events by id
 
+  export const updateEvent = async (req, res) => {
+    const eventData = req.body;
+    const { id } = req.params;
+    const event = await Event.findById(req.params.id);
   
+    if (!event) return res.status(404).send(`No event with id: ${id}`);
+  
+    const updatedEvent = await Event.findByIdAndUpdate(id, eventData, {
+      new: true,
+    });
+    res.json({ message: "Updated successfully" });
+  };
+
+
+  export const deleteEvent = async (req, res) => {
+    const { id } = req.params;
+  
+    const event = await Event.findById(req.params.id);
+  
+    if (!event) return res.status(404).send(`No event with id: ${id}`);
+  
+    await Event.findByIdAndRemove(id);
+    res.json({ message: "Deleted successfully" });
+  
+    res.json(Event);
+  };
+  
+

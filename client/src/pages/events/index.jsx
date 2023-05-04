@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { Box, Button, Typography } from "@mui/material";
+import NewEvent from "./NewEvent";
+import WidgetWrapper from "../../components/customMUI/WidgetWrapper";
 
 
 
@@ -13,7 +15,9 @@ const Event = () => {
     
   <div>
 
-    <Box><center><Button> Add Event</Button></center></Box>
+    <Box><WidgetWrapper>
+        <NewEvent />
+      </WidgetWrapper></Box>
     <br />
     <hr/>
     <Box display="flex" flexDirection="column" gap="1rem">
