@@ -21,6 +21,7 @@ import { verifyTokenUser } from "./middleware/authUserToken.js";
 import { verifyTokenAdmin } from "./middleware/authAdminToken.js";
 
 import { addNewPost } from "./controllers/posts.js";
+import { addNewEvent } from "./controllers/compevents.js";
 
 /* configurations */
 dotenv.config();
@@ -71,6 +72,15 @@ app.post(
   imageHandlingMiddleware,
   addNewPost
 );
+
+app.post(
+  "/api/compevents/new",
+  verifyTokenUser,
+  uploader.single("imageURL"),
+  imageHandlingMiddleware,
+  addNewEvent
+);
+
 
 /* Routes */
 app.use("/api/auth", authRouter);

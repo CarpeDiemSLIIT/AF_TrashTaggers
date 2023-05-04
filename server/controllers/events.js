@@ -30,7 +30,7 @@ export const getAllEvents = async (req, res) => {
   };
   
 
-  //TODO : edit events , delete events , get events by id
+  //TODO :  get events by id
 
   export const updateEvent = async (req, res) => {
     const eventData = req.body;
@@ -39,7 +39,7 @@ export const getAllEvents = async (req, res) => {
   
     if (!event) return res.status(404).send(`No event with id: ${id}`);
   
-    const updatedEvent = await Event.findByIdAndUpdate(id, eventData, {
+    await Event.findByIdAndUpdate(id, eventData, {
       new: true,
     });
     res.json({ message: "Updated successfully" });
