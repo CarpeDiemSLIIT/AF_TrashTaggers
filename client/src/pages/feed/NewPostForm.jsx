@@ -10,7 +10,6 @@ import {
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Field, Formik } from "formik";
 import * as yup from "yup";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Dropzone from "react-dropzone";
 import FlexBetween from "../../components/customMUI/FlexBetween";
@@ -30,7 +29,6 @@ const NewPostForm = ({ handleClose }) => {
   const [error, setError] = useState("");
   const { palette } = useTheme();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { isError, message, isSuccess, isLoading } = useSelector(
     (state) => state.post
   );
@@ -96,6 +94,9 @@ const NewPostForm = ({ handleClose }) => {
             >
               <Dropzone
                 acceptedFiles=".jpg,.jpeg,.png"
+                accept={{
+                  "image/png": [".png", ".jpg", ".jpeg"],
+                }}
                 multiple={false}
                 onDrop={(acceptedFiles) =>
                   setFieldValue("imageURL", acceptedFiles[0])
@@ -121,13 +122,6 @@ const NewPostForm = ({ handleClose }) => {
                 )}
               </Dropzone>
             </Box>
-            {isError && (
-              <Box>
-                <Typography variant="body1" color="red">
-                  {message}
-                </Typography>
-              </Box>
-            )}
 
             <Button
               fullWidth

@@ -37,6 +37,10 @@ const adminSchema = mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    bio: {
+      type: String,
+      default: "",
+    },
     imageURL: {
       type: String,
       default: "",

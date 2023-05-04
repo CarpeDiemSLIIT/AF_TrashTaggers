@@ -10,7 +10,6 @@ const LoginPage = () => {
       <Box
         width="100%"
         backgroundColor={theme.palette.background.alt}
-        p="1rem 6%"
         textAlign="center"
       >
         <Typography fontWeight="bold" fontSize="32px" color="primary">
@@ -19,18 +18,23 @@ const LoginPage = () => {
       </Box>
 
       <Grid container>
-        <Grid item xs={8}>
+        <Grid
+          item
+          xs={0}
+          md={8}
+          display={isNonMobileScreens ? "block" : "none"}
+        >
           <Box
             marginTop="1%"
             marginLeft="2%"
             component="img"
-            width={isNonMobileScreens ? "100%" : "93%"}
+            width={isNonMobileScreens ? "100%" : "0%"}
             backgroundColor={theme.palette.background.alt}
             borderRadius="1.5rem"
             src={loginImage}
           ></Box>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} md={4}>
           <Box
             width={isNonMobileScreens ? "80%" : "93%"}
             p="2rem"

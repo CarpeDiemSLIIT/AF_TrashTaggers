@@ -16,6 +16,41 @@ const addNewPost = async (post, token) => {
   return response.data;
 };
 
+const deletePost = async (id, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.delete(API_URL + `${id}/delete`, config);
+  return response.data;
+};
+
+const updatePost = async (post, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.put(API_URL + `update/${post.id}`, post, config);
+
+  return response.data;
+};
+const updatePostImage = async (post, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.put(
+    API_URL + `updatePostImage/${post.id}`,
+    post.formData,
+    config
+  );
+
+  return response.data;
+};
+
 const upVotePost = async (id, token) => {
   const config = {
     headers: {
@@ -23,7 +58,6 @@ const upVotePost = async (id, token) => {
     },
   };
   const response = await axios.patch(API_URL + `${id}/upvote`, {}, config);
-  console.log(response.data);
   return response.data;
 };
 const downVotePost = async (id, token) => {
@@ -33,13 +67,15 @@ const downVotePost = async (id, token) => {
     },
   };
   const response = await axios.patch(API_URL + `${id}/downvote`, {}, config);
-  console.log(response.data);
   return response.data;
 };
 
 export default {
   getAllPosts,
   addNewPost,
+  deletePost,
   upVotePost,
   downVotePost,
+  updatePost,
+  updatePostImage,
 };

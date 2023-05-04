@@ -33,13 +33,20 @@ const NewPost = () => {
   return (
     <>
       <FlexBetween
-        sx={{ width: "100%", gap: "29px" }}
+        sx={{
+          width: "100%",
+          gap: "29px",
+          "&:hover": {
+            cursor: "pointer",
+          },
+        }}
         onClick={() => {
           if (!user) navigate("/login");
           setOpen(true);
         }}
       >
-        <Avatar src={user?.imageURL} />
+        {user ? <Avatar src={user.userData.imageURL} /> : <Avatar />}
+
         <TextField
           label="Tell us about, what you did?"
           multiline

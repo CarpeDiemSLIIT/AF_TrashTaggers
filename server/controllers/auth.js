@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import e from "cors";
 
 /* Register user */
 export const register = async (req, res) => {
@@ -63,6 +64,18 @@ export const makeAdmin = async (req, res) => {
     user.status = "admin";
     const savedUser = await user.save();
     res.status(201).json(savedUser);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/* GETTING User */
+export const getMe = async (req, res) => {
+  try {
+    console.log("this line runs");
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(400).json({ msg: "User does not exist." });
+    res.status(201).json(user);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

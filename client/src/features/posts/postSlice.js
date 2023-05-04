@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import postService from "./postService";
+import { toast } from "react-toastify";
 
 const initialState = {
   posts: [],
@@ -42,6 +43,57 @@ export const addNewPost = createAsyncThunk(
     }
   }
 );
+export const deletePost = createAsyncThunk(
+  "post/deletePost",
+  async (post, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await postService.deletePost(post, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const updatePost = createAsyncThunk(
+  "post/updatePost",
+  async (post, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await postService.updatePost(post, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const updatePostImage = createAsyncThunk(
+  "post/updatePostImage",
+  async (post, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await postService.updatePostImage(post, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const upVotePost = createAsyncThunk(
   "post/upVotePost",
@@ -61,7 +113,7 @@ export const upVotePost = createAsyncThunk(
   }
 );
 export const downVotePost = createAsyncThunk(
-  "post/upVotePost",
+  "post/downVotePost",
   async (id, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
@@ -93,6 +145,7 @@ const postSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      //get all posts
       .addCase(getAllPosts.pending, (state) => {
         state.isLoading = true;
       })
@@ -104,17 +157,78 @@ const postSlice = createSlice({
       .addCase(getAllPosts.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
+        toast.error(`Error: ${action.payload}`);
         state.message = action.payload;
       })
+      //add new post
       .addCase(addNewPost.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(addNewPost.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
+        toast.success("Post added successfully");
         state.posts.push(action.payload);
       })
       .addCase(addNewPost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      //delete post
+      .addCase(deletePost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(deletePost.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deletePost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        toast.success("Post deleted successfully");
+        state.posts = state.posts.filter(
+          (post) => post._id !== action.payload._id
+        );
+      })
+      //update post
+      .addCase(updatePost.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updatePost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        toast.success("Post updated successfully");
+        state.posts = state.posts.map((post) =>
+          post._id === action.payload._id ? action.payload : post
+        );
+      })
+      .addCase(updatePost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      //update post image
+      .addCase(updatePostImage.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updatePostImage.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        toast.success("Post updated successfully");
+        state.posts = state.posts.map((post) =>
+          post._id === action.payload._id ? action.payload : post
+        );
+      })
+      .addCase(updatePostImage.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      //upvote post
+      .addCase(upVotePost.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
@@ -125,15 +239,25 @@ const postSlice = createSlice({
       .addCase(upVotePost.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        console.log(action.payload);
         state.posts = state.posts.map((post) =>
           post._id === action.payload._id ? action.payload : post
         );
       })
-      .addCase(upVotePost.rejected, (state, action) => {
+      //downvote post
+      .addCase(downVotePost.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(downVotePost.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(downVotePost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.posts = state.posts.map((post) =>
+          post._id === action.payload._id ? action.payload : post
+        );
       });
   },
 });

@@ -14,16 +14,35 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { login, reset } from "../../features/auth/authSlice";
+import { register, reset } from "../../features/auth/authSlice";
 
-const loginSchema = yup.object().shape({
+const registerSchema = yup.object().shape({
+  firstName: yup.string().required("required"),
+  lastName: yup.string().required("required"),
   email: yup.string().required("required"),
-  password: yup.string().required("required"),
+  password: yup.string().min(8, "Password must be 8 characters long"),
+  // .matches(/[0-9]/, "Password requires a number")
+  // .matches(/[a-z]/, "Password requires a lowercase letter")
+  // .matches(/[A-Z]/, "Password requires an uppercase letter")
+  // .matches(/[^\w]/, "Password requires a symbol"),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password"), null], 'Must match "password" field value'),
+
+  // confirmPassword: yup.string().when("password", {
+  //   is: (val) => (val && val.length > 0 ? true : false),
+  //   then: yup
+  //     .string()
+  //     .oneOf([yup.ref("password")], "Both password need to be the same"),
+  // }),
 });
 
-const initialValuesLogin = {
+const initialValuesRegister = {
+  firstName: "",
+  lastName: "",
   email: "",
   password: "",
+  confirmPassword: "",
 };
 export default function Form() {
   const { palette } = useTheme();
@@ -35,24 +54,7 @@ export default function Form() {
     (state) => state.auth
   );
 
-  const [open, setOpen] = useState(false);
-
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
-
   useEffect(() => {
-    if (isError) {
-      setOpen(true);
-    }
     if (isSuccess || user) {
       navigate("/");
     }
@@ -61,14 +63,14 @@ export default function Form() {
   }, [user, isError, isSuccess, message, navigate, dispatch]);
 
   const handleFormSubmit = (values) => {
-    dispatch(login(values));
+    dispatch(register(values));
   };
 
   return (
     <Formik
       onSubmit={handleFormSubmit}
-      initialValues={initialValuesLogin}
-      validationSchema={loginSchema}
+      initialValues={initialValuesRegister}
+      validationSchema={registerSchema}
     >
       {({
         values,
@@ -89,6 +91,28 @@ export default function Form() {
               "& > div": { gridColumn: isNonMobile ? undefined : "span 2" },
             }}
           >
+            <TextField
+              label="First Name"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.firstName}
+              name="firstName"
+              error={Boolean(touched.firstName) && Boolean(errors.firstName)}
+              helperText={touched.firstName && errors.firstName}
+              sx={{ gridColumn: "span 2" }}
+              style={{ width: "100%", margin: "auto" }}
+            />
+            <TextField
+              label="Last Name"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.lastName}
+              name="lastName"
+              error={Boolean(touched.lastName) && Boolean(errors.lastName)}
+              helperText={touched.lastName && errors.lastName}
+              sx={{ gridColumn: "span 2" }}
+              style={{ width: "100%", margin: "auto" }}
+            />
             <TextField
               label="Email"
               type="email"
@@ -113,6 +137,21 @@ export default function Form() {
               sx={{ gridColumn: "span 2" }}
               style={{ width: "100%", margin: "auto" }}
             />
+            <TextField
+              label="Confirm Password"
+              type="password"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.confirmPassword}
+              name="confirmPassword"
+              error={
+                Boolean(touched.confirmPassword) &&
+                Boolean(errors.confirmPassword)
+              }
+              helperText={touched.confirmPassword && errors.confirmPassword}
+              sx={{ gridColumn: "span 2" }}
+              style={{ width: "100%", margin: "auto" }}
+            />
           </Box>
           {/* BUTTONS */}
           <Box>
@@ -127,23 +166,9 @@ export default function Form() {
                 "&:hover": { color: palette.primary.main },
               }}
             >
-              LOGIN
+              Register
             </Button>
           </Box>
-          <Snackbar
-            open={open}
-            anchorOrigin={{ vertical: "top", horizontal: "center" }}
-            autoHideDuration={6000}
-            onClose={handleClose}
-          >
-            <Alert
-              onClose={handleClose}
-              severity="error"
-              sx={{ width: "100%" }}
-            >
-              Invalid Credentials!
-            </Alert>
-          </Snackbar>
         </form>
       )}
     </Formik>

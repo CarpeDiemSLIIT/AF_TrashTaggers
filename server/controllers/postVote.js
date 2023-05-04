@@ -4,11 +4,11 @@ import Comment from "../models/Comment.js";
 
 const pointsCalculator = (upVotes, downVotes) => {
   const points = upVotes - downVotes;
-  if (points <= 0) {
-    return 0; // stop the the negative effect for user
-  } else {
-    return points;
-  }
+  // if (points <= 0) {
+  // return 0; // stop the the negative effect for user
+  // } else {
+  return points;
+  // }
 };
 
 const upVotePost = async (req, res) => {
@@ -38,15 +38,18 @@ const upVotePost = async (req, res) => {
   }
 
   if (post.upVotes.includes(user._id.toString())) {
-    post.upVotes = post.upVotes.filter(
-      (u) => u.toString() !== user._id.toString()
-    );
+    post.upVotes = post.upVotes.filter((u) => {
+      u.toString() !== user._id.toString();
+    });
     author.points -= 5;
   } else {
     post.upVotes = post.upVotes.concat(user._id);
-    post.downVotes = post.downVotes.filter(
-      (d) => d.toString() !== user._id.toString()
-    );
+    if (post.downVotes.includes(user._id.toString())) {
+      post.downVotes = post.downVotes.filter(
+        (d) => d.toString() !== user._id.toString()
+      );
+      author.points += 5;
+    }
     author.points += 5;
   }
 
@@ -98,10 +101,13 @@ const downVotePost = async (req, res) => {
     author.points += 5;
   } else {
     post.downVotes = post.downVotes.concat(user._id);
-    post.upVotes = post.upVotes.filter(
-      (d) => d.toString() !== user._id.toString()
-    );
-    author.points += 5;
+    if (post.upVotes.includes(user._id.toString())) {
+      post.upVotes = post.upVotes.filter(
+        (d) => d.toString() !== user._id.toString()
+      );
+      author.points -= 5;
+    }
+    author.points -= 5;
   }
 
   const calculatedData = pointsCalculator(

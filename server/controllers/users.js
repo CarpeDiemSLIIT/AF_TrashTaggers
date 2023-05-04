@@ -41,3 +41,14 @@ export const reActiveUser = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+//view user profile
+export const getProfile = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const users = await User.findById(id);
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
