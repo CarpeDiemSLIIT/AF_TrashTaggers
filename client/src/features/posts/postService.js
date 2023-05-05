@@ -16,6 +16,27 @@ const addNewPost = async (post, token) => {
   return response.data;
 };
 
+//approve new post
+const approveNewPost = async (postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.patch(API_URL + `approve/${postId}`, {}, config);
+  return response.data;
+};
+//reject new post
+const rejectNewPost = async (postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.patch(API_URL + `reject/${postId}`, {}, config);
+  return response.data;
+};
+
 const deletePost = async (id, token) => {
   const config = {
     headers: {
@@ -78,4 +99,6 @@ export default {
   downVotePost,
   updatePost,
   updatePostImage,
+  approveNewPost,
+  rejectNewPost,
 };

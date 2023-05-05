@@ -129,6 +129,41 @@ export const downVotePost = createAsyncThunk(
     }
   }
 );
+export const approveNewPost = createAsyncThunk(
+  "post/approveNewPost",
+  async (postId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await postService.approveNewPost(postId, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const rejectNewPost = createAsyncThunk(
+  "post/rejectNewPost",
+  async (postId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await postService.rejectNewPost(postId, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 const postSlice = createSlice({
   name: "post",
@@ -258,6 +293,34 @@ const postSlice = createSlice({
         state.posts = state.posts.map((post) =>
           post._id === action.payload._id ? action.payload : post
         );
+      })
+      //approve new post
+      .addCase(approveNewPost.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(approveNewPost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.posts = action.payload;
+      })
+      .addCase(approveNewPost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      //reject new post
+      .addCase(rejectNewPost.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(rejectNewPost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.posts = action.payload;
+      })
+      .addCase(rejectNewPost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
       });
   },
 });

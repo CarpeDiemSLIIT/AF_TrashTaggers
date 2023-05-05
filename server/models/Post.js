@@ -14,6 +14,11 @@ const PostSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  status: {
+    type: String,
+    required: true,
+    default: "pending",
+  },
   createdAt: {
     type: Date,
     default: Date.now,

@@ -124,3 +124,28 @@ export const getAllMyPosts = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 };
+
+//approve a post
+export const approvePost = async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  try {
+    const posts = await Post.findByIdAndUpdate(id, { status: "approved" });
+    const newPosts = await Post.find().populate("author");
+    res.status(200).json(newPosts);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+//reject a post
+export const rejectPost = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const posts = await Post.findByIdAndDelete(id);
+    const newPosts = await Post.find().populate("author");
+    res.status(200).json(newPosts);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
