@@ -13,6 +13,9 @@ import Profile from "./pages/profile";
 import Feed from "./pages/feed";
 import Events from "./pages/events";
 import Register from "./pages/register";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en.json";
+import ru from "javascript-time-ago/locale/ru.json";
 
 //admin dashboard
 import AdminDashboard from "./pages/adminDashboard";
@@ -20,13 +23,14 @@ import UserManagement from "./pages/adminDashboard/userManagement";
 import SuspendedUsers from "./pages/adminDashboard/userManagement/suspendUser";
 import PostManagement from "./pages/adminDashboard/postManagement";
 import EventManagement from "./pages/adminDashboard/eventManagement";
+import AuthorProfile from "./pages/authorProfile";
 
 function App() {
   const { user, mode } = useSelector((state) => state.auth);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
-
+  TimeAgo.setDefaultLocale(en.locale);
+  TimeAgo.addLocale(en);
   // const isAuth = Boolean(useSelector((state) => state.token));
-
   return (
     <div className="app">
       <BrowserRouter>
@@ -44,6 +48,7 @@ function App() {
                 path="profile"
                 element={user ? <Profile /> : <Navigate to="/login" />}
               />
+              <Route path="user/:userId" element={<AuthorProfile />} />
               <Route
                 path="admin-dashboard"
                 element={

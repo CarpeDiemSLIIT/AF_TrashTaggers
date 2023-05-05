@@ -7,18 +7,23 @@ import {
   IconButton,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FlexBetween from "../../components/customMUI/FlexBetween";
 import { useDispatch, useSelector } from "react-redux";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router";
 import NewPostForm from "./NewPostForm.jsx";
+import { reset } from "../../features/posts/postSlice";
 const NewPost = () => {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    dispatch(reset());
+  }, []);
 
   const handleClose = (event, reason) => {
     // if (reason && reason == "backdropClick") return;
@@ -28,13 +33,20 @@ const NewPost = () => {
   return (
     <>
       <FlexBetween
-        sx={{ width: "100%", gap: "29px" }}
+        sx={{
+          width: "100%",
+          gap: "29px",
+          "&:hover": {
+            cursor: "pointer",
+          },
+        }}
         onClick={() => {
           if (!user) navigate("/login");
           setOpen(true);
         }}
       >
-        <Avatar src={user?.imageURL} />
+        {user ? <Avatar src={user.userData.imageURL} /> : <Avatar />}
+
         <TextField
           label="Tell us about, what you did?"
           multiline

@@ -1,47 +1,74 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { Box, Typography, Button, Avatar, IconButton } from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  Box,
+  Typography,
+  Button,
+  Avatar,
+  IconButton,
+  Backdrop,
+  CircularProgress,
+} from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import WidgetWrapper from "../../components/customMUI/WidgetWrapper";
 import { useEffect } from "react";
-import FlexBetween from "../../components/customMUI/FlexBetween";
-import EditProfile from "./EditProfile";
-import Post from "../../components/Posts/Post";
-import { getAllPosts } from "../../features/posts/postSlice";
-import { refreshUser, reset } from "../../features/auth/authSlice.js";
-
+import axios from "axios";
 import RecyclingIcon from "@mui/icons-material/Recycling";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { getAllPosts, reset } from "../../features/posts/postSlice";
 
-const Profile = () => {
-  const { user } = useSelector((state) => state.auth);
+import FlexBetween from "../../components/customMUI/FlexBetween";
+import Post from "../../components/Posts/Post";
+import { toast } from "react-toastify";
+
+const AuthorProfile = () => {
+  const { userId } = useParams();
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+
   const { posts, isError, message, isSuccess, isLoading } = useSelector(
     (state) => state.post
   );
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const date = new Date(user.userData.dateJoined);
-  const options = { year: "numeric", month: "long", day: "numeric" };
-  const formattedDate = date.toLocaleDateString("en-GB", options);
+  const getUser = async () => {
+    const response = await axios.get(
+      "http://localhost:3001/api/users/profile/" + userId
+    );
+    if (response.status == 200) setUser(response.data);
+    else {
+      setError(response.data.message);
+      toast.error(response.data.message);
+    }
+  };
+
   useEffect(() => {
     dispatch(getAllPosts());
+    getUser();
+
     return () => {
       reset();
     };
   }, []);
-  useEffect(() => {
-    dispatch(refreshUser());
-    return () => {
-      reset();
-    };
-  }, [posts]);
 
-  if (!user) return <div>loading...</div>;
+  if (!user && !error) {
+    return (
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={true}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
+  }
+  if (error) {
+    return <>{error}</>;
+  }
+
   const {
-    badges,
     dateJoined,
     bio,
     email,
@@ -52,7 +79,10 @@ const Profile = () => {
     points,
     role,
     status,
-  } = user.userData;
+  } = user;
+  const date = new Date(dateJoined);
+  const options = { year: "numeric", month: "long", day: "numeric" };
+  const formattedDate = date.toLocaleDateString("en-GB", options);
   return (
     <Box display="flex" gap="1rem" flexDirection="column">
       <Box display="flex" alignItems="center">
@@ -107,22 +137,17 @@ const Profile = () => {
                   Joined on {formattedDate}
                 </FlexBetween>
               </FlexBetween>
-              <Typography variant="body1">
-                {bio
-                  ? bio
-                  : "No bio yet? Lets change that. Click on the edit button and add a bio."}
-              </Typography>
+              <Typography variant="body1">{bio ? bio : ""}</Typography>
             </Box>
           </Box>
-          <EditProfile />
         </FlexBetween>
       </WidgetWrapper>
       {posts.length > 0 &&
         posts
-          .filter((post) => post.author._id === user.userData._id)
+          .filter((post) => post.author._id === user._id)
           .map((post) => <Post post={post} key={post._id} />)}
     </Box>
   );
 };
 
-export default Profile;
+export default AuthorProfile;

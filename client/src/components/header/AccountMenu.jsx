@@ -11,9 +11,11 @@ import Tooltip from "@mui/material/Tooltip";
 import Logout from "@mui/icons-material/Logout";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
+import { useNavigate } from "react-router";
 
 export default function AccountMenu() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user.userData);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -78,12 +80,17 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem
+          onClick={() => {
+            navigate("/profile");
+            handleClose();
+          }}
+        >
           <Avatar
             src={user.ImageURL ? user.ImageURL : ""}
             sx={{ width: 32, height: 32 }}
             alt={user.firstName}
-          />{" "}
+          />
           {user.firstName} {user.lastName}
         </MenuItem>
 

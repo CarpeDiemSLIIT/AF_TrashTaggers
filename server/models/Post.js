@@ -9,22 +9,35 @@ const PostSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  user: {
+  author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
+  },
+  status: {
+    type: String,
+    required: true,
+    default: "pending",
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
-  upVotes: {
-    type: Map,
-    of: Boolean,
-  },
-  downVotes: {
-    type: Map,
-    of: Boolean,
+  upVotes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  downVotes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  netVotes: {
+    type: Number,
+    default: 0,
   },
   comments: [
     {

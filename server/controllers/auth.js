@@ -67,3 +67,15 @@ export const makeAdmin = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+/* GETTING User */
+export const getMe = async (req, res) => {
+  try {
+    console.log("this line runs");
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(400).json({ msg: "User does not exist." });
+    res.status(201).json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
