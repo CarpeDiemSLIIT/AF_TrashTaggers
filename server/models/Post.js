@@ -39,10 +39,12 @@ const PostSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  comments: {
-    type: Array,
-    default: [],
-  },
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+    },
+  ],
 });
 
 const Post = mongoose.model("Post", PostSchema);

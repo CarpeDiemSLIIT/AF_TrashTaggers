@@ -4,7 +4,9 @@ import Comment from "../models/Comment.js";
 
 export const getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find().populate("author").populate("comments");
+    const posts = await Post.find()
+      .populate("author")
+      .populate({ path: "comments", populate: { path: "user" } });
     res.status(200).json(posts);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -26,7 +28,7 @@ export const addNewPost = async (req, res) => {
     await newPost.save();
     const newPostWithPopulate = await Post.findById(newPost._id)
       .populate("author")
-      .populate("comments");
+      .populate({ path: "comments", populate: { path: "user" } });
     res.status(201).json(newPostWithPopulate);
   } catch (error) {
     res.status(409).json({ message: error.message });
@@ -53,7 +55,7 @@ export const updatePost = async (req, res) => {
       { new: true }
     )
       .populate("author")
-      .populate("comments");
+      .populate({ path: "comments", populate: { path: "user" } });
     res.status(201).json(updatedPost);
   } catch (error) {
     res.status(409).json({ message: error.message });
@@ -81,7 +83,7 @@ export const updatePostImage = async (req, res) => {
       { new: true }
     )
       .populate("author")
-      .populate("comments");
+      .populate({ path: "comments", populate: { path: "user" } });
     res.status(201).json(updatedPost);
   } catch (error) {
     res.status(409).json({ message: error.message });
@@ -110,18 +112,6 @@ export const deletePost = async (req, res) => {
     res.status(200).json(deletedPost);
   } catch (error) {
     res.status(409).json({ message: error.message });
-  }
-};
-
-export const getAllMyPosts = async (req, res) => {
-  const { _id } = req.user;
-  try {
-    const posts = await Post.find({ author: _id })
-      .populate("author")
-      .populate("comments");
-    res.status(200).json(posts);
-  } catch (error) {
-    res.status(404).json({ message: error.message });
   }
 };
 

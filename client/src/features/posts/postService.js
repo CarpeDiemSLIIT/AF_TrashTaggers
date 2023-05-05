@@ -90,13 +90,27 @@ const downVotePost = async (id, token) => {
   const response = await axios.patch(API_URL + `${id}/downvote`, {}, config);
   return response.data;
 };
-
+const newComment = async (postIdAndComment, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.post(
+    API_URL + `${postIdAndComment.postId}/newComment`,
+    { comment: postIdAndComment.comment },
+    config
+  );
+  return response.data;
+};
 export default {
   getAllPosts,
   addNewPost,
   deletePost,
   upVotePost,
   downVotePost,
+  newComment,
+  //admin
   updatePost,
   updatePostImage,
   approveNewPost,

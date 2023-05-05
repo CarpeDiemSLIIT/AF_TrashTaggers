@@ -64,7 +64,7 @@ const upVotePost = async (req, res) => {
   await author.save();
   const newPostWithPopulate = await Post.findById(post._id)
     .populate("author")
-    .populate("comments");
+    .populate({ path: "comments", populate: { path: "user" } });
   res.status(200).json(newPostWithPopulate).end();
 };
 const downVotePost = async (req, res) => {
@@ -122,7 +122,7 @@ const downVotePost = async (req, res) => {
 
   const newPostWithPopulate = await Post.findById(post._id)
     .populate("author")
-    .populate("comments");
+    .populate({ path: "comments", populate: { path: "user" } });
   res.status(201).json(newPostWithPopulate).end();
 };
 

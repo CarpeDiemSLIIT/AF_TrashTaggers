@@ -1,5 +1,5 @@
 import { Avatar, Box, Checkbox, Typography, useTheme } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { ArrowUpward, ArrowDownward } from "@mui/icons-material";
 import ReactTimeAgo from "react-time-ago";
 import { useDispatch } from "react-redux";
@@ -8,13 +8,16 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import PostMenu from "./PostMenu";
+import Comments from "./Comments";
 
 const Post = ({ post }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
+  const [viewComments, setViewComments] = useState(false);
 
   const handleDownVote = () => {
     try {
@@ -122,6 +125,18 @@ const Post = ({ post }) => {
           checked={user && post.downVotes.includes(user.userData._id)}
         />
       </Box>
+      <Box display="flex">
+        <ArrowDropDownIcon />
+        <Typography
+          variant="body1"
+          sx={{ "&:hover": { cursor: "pointer" } }}
+          onClick={() => setViewComments((state) => !state)}
+        >
+          {post.comments.length} Comments
+        </Typography>
+      </Box>
+
+      {viewComments && <Comments post={post} />}
     </Box>
   );
 };

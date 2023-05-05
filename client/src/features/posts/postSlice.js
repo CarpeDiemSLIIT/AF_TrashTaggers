@@ -129,6 +129,24 @@ export const downVotePost = createAsyncThunk(
     }
   }
 );
+
+export const newComment = createAsyncThunk(
+  "post/newComment",
+  async (postIdAndComment, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await postService.newComment(postIdAndComment, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const approveNewPost = createAsyncThunk(
   "post/approveNewPost",
   async (postId, thunkAPI) => {
@@ -293,6 +311,22 @@ const postSlice = createSlice({
         state.posts = state.posts.map((post) =>
           post._id === action.payload._id ? action.payload : post
         );
+      })
+      //new comment
+      .addCase(newComment.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(newComment.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(newComment.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.posts
+          .find((post) => post._id === action.payload.postId)
+          .comments.push(action.payload.comment);
       })
       //approve new post
       .addCase(approveNewPost.pending, (state) => {
