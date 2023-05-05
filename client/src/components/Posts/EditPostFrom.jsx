@@ -32,7 +32,7 @@ const EditPostFrom = ({ handleClose, post }) => {
   const initialValues = {
     description: post.description,
   };
-  const newPost = async (values, onSubmitProps) => {
+  const postUpdate = async (values, onSubmitProps) => {
     dispatch(updatePost({ id: post._id, description: values.description }));
 
     onSubmitProps.resetForm();
@@ -40,7 +40,7 @@ const EditPostFrom = ({ handleClose, post }) => {
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {
-    newPost(values, onSubmitProps);
+    postUpdate(values, onSubmitProps);
   };
 
   return (
@@ -81,6 +81,7 @@ const EditPostFrom = ({ handleClose, post }) => {
                   Boolean(touched.description) && Boolean(errors.description)
                 }
                 helperText={touched.description && errors.description}
+                multiline
               />
 
               {descriptionChanged && (

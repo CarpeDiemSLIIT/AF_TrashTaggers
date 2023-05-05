@@ -32,8 +32,13 @@ const setMode = (state) => {
   localStorage.setItem("mode", state);
 };
 
-const makeMeAdmin = async () => {
-  const response = await axios.put(API_URL + "makeMeAdmin");
+const makeMeAdmin = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.put(API_URL + "makeMeAdmin", {}, config);
   return response.data;
 };
 const refreshUser = async (token) => {
@@ -54,6 +59,30 @@ const refreshUser = async (token) => {
 
   return response.data;
 };
+const updateImage = async (imageURL, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.put(
+    API_URL + "updateProfileImage",
+    imageURL,
+    config
+  );
+  return response.data;
+};
+
+const updateUserData = async (userData, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.put(API_URL + "updateMe", userData, config);
+  return response.data;
+};
+
 export default {
   logout,
   login,
@@ -61,4 +90,6 @@ export default {
   setMode,
   makeMeAdmin,
   refreshUser,
+  updateImage,
+  updateUserData,
 };

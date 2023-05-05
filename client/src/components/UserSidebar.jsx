@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CloseIcon from "@mui/icons-material/Close";
+import Profile from "./ProfileForSidebar";
 import {
   Box,
   Button,
@@ -18,11 +19,15 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import WidgetWrapper from "./customMUI/WidgetWrapper";
 import FlexBetween from "./customMUI/FlexBetween";
-import { useNavigate } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 export default function Sidebar() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const { palette } = useTheme();
+  const user = useSelector((state) => state.auth.user);
   return (
     <Box
       sx={{
@@ -30,18 +35,68 @@ export default function Sidebar() {
         borderRadius: "0.75rem",
       }}
     >
-      <Selection name="Profile" url="profile" />
+      <Link
+        to="/profile"
+        style={{
+          textDecoration: "none",
+          "&:hover": {
+            textDecoration: "none",
+          },
+          color: "inherit",
+        }}
+      >
+        {user && <Profile />}
+      </Link>
+
+      <Box
+        width="100%"
+        onClick={() => {
+          navigate(`/`);
+        }}
+        sx={{
+          "&:hover": {
+            backgroundColor: palette.primary.light,
+            transform: "scale(1.05)",
+            cursor: "pointer",
+          },
+          display: "flex",
+          gap: "1rem",
+        }}
+        padding="1.0rem"
+      >
+        <PhotoCameraBackIcon />
+        <Typography variant="h5" color={palette.neutral.dark}>
+          Feed
+        </Typography>
+      </Box>
       <Divider />
-      <Selection name="Feed" url="" />
-      <Divider />
-      <Selection name="Events" url="events" />
+      <Box
+        width="100%"
+        onClick={() => {
+          navigate(`/events`);
+        }}
+        sx={{
+          "&:hover": {
+            backgroundColor: palette.primary.light,
+            transform: "scale(1.05)",
+            cursor: "pointer",
+          },
+          display: "flex",
+          gap: "1rem",
+        }}
+        padding="1.0rem"
+      >
+        <CalendarMonthIcon />
+        <Typography variant="h5" color={palette.neutral.dark}>
+          Events
+        </Typography>
+      </Box>
     </Box>
   );
 }
 
-const Selection = ({ name, url }) => {
+const Selection = ({ name, url, Icon }) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const { palette } = useTheme();
   const primaryLight = palette.primary.light;
@@ -63,6 +118,7 @@ const Selection = ({ name, url }) => {
       }}
       padding="1.0rem"
     >
+      <Icon />
       <Typography variant="h5" color={palette.neutral.dark}>
         {name}
       </Typography>

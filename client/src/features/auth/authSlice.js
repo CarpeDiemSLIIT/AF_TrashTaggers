@@ -64,6 +64,45 @@ export const refreshUser = createAsyncThunk(
   }
 );
 
+// update image
+
+export const updateProfileImage = createAsyncThunk(
+  "auth/updateProfileImage",
+  async (image, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await authService.updateImage(image, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// update user data
+export const updateUserData = createAsyncThunk(
+  "auth/updateUserData",
+  async (userData, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await authService.updateUserData(userData, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const logout = createAsyncThunk("auth/logout", async () => {
   await authService.logout();
 });
@@ -133,7 +172,34 @@ export const authSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
         toast.error(`Error: ${action.payload}`);
-        state.user = null;
+      })
+      .addCase(updateProfileImage.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateProfileImage.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user.userData = action.payload;
+      })
+      .addCase(updateProfileImage.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(updateUserData.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateUserData.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user.userData = action.payload;
+      })
+      .addCase(updateUserData.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(`Error: ${action.payload}`);
       });
   },
 });

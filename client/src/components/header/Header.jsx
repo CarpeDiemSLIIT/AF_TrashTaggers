@@ -1,4 +1,4 @@
-import { DarkMode, LightMode, Notifications } from "@mui/icons-material";
+import { DarkMode, LightMode } from "@mui/icons-material";
 import { Box, Button, IconButton, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, logout } from "../../features/auth/authSlice";
@@ -6,7 +6,8 @@ import logo from "../../assets/ayusha.svg";
 import FlexBetween from "../customMUI/FlexBetween";
 import { useNavigate } from "react-router-dom";
 import AccountMenu from "./AccountMenu";
-
+import HowToRegIcon from "@mui/icons-material/HowToReg";
+import LoginIcon from "@mui/icons-material/Login";
 const Header = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -31,6 +32,16 @@ const Header = () => {
         <img src={logo} alt="logo" height="40px" />
       </Box>
       <FlexBetween>
+        {user && user.userData.role === "admin" && (
+          <Button
+            variant="outlined"
+            onClick={() => {
+              navigate("/admin-dashboard");
+            }}
+          >
+            Admin Dashboard
+          </Button>
+        )}
         <IconButton
           onClick={() => dispatch(setMode())}
           sx={{ fontSize: "25px" }}
@@ -44,24 +55,6 @@ const Header = () => {
 
         {user ? (
           <>
-            {user.userData.role === "admin" && (
-              <Button
-                variant="outlined"
-                onClick={() => {
-                  navigate("/admin-dashboard");
-                }}
-              >
-                Admin Dashboard
-              </Button>
-            )}
-            <IconButton
-              onClick={() => {
-                navigate("/profile");
-              }}
-              sx={{ fontSize: "25px" }}
-            >
-              <Notifications sx={{ color: dark, fontSize: "25px" }} />
-            </IconButton>
             <AccountMenu />
           </>
         ) : (
@@ -71,6 +64,7 @@ const Header = () => {
               onClick={() => {
                 navigate("/login");
               }}
+              startIcon={<LoginIcon sx={{ color: primaryLight }} />}
             >
               Log In
             </Button>
@@ -79,6 +73,7 @@ const Header = () => {
               onClick={() => {
                 navigate("/register");
               }}
+              startIcon={<HowToRegIcon sx={{ color: primaryLight }} />}
             >
               Sign Up
             </Button>

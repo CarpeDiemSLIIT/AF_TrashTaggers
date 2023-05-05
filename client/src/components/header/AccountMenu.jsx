@@ -7,6 +7,8 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 import Logout from "@mui/icons-material/Logout";
 import { useDispatch, useSelector } from "react-redux";
@@ -38,7 +40,7 @@ export default function AccountMenu() {
             aria-expanded={open ? "true" : undefined}
           >
             <Avatar
-              src={user.ImageURL ? user.ImageURL : ""}
+              src={user.imageURL ? user.imageURL : ""}
               sx={{ width: 32, height: 32 }}
               alt={user.firstName}
             />
@@ -87,11 +89,30 @@ export default function AccountMenu() {
           }}
         >
           <Avatar
-            src={user.ImageURL ? user.ImageURL : ""}
+            src={user.imageURL ? user.imageURL : ""}
             sx={{ width: 32, height: 32 }}
             alt={user.firstName}
           />
           {user.firstName} {user.lastName}
+        </MenuItem>
+
+        <MenuItem
+          onClick={() => {
+            navigate("/");
+            handleClose();
+          }}
+        >
+          <PhotoCameraBackIcon sx={{ width: 32, height: 32, padding: "3px" }} />
+          Feed
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            navigate("/events");
+            handleClose();
+          }}
+        >
+          <CalendarMonthIcon sx={{ width: 32, height: 32, padding: "3px" }} />
+          Events
         </MenuItem>
 
         <Divider />

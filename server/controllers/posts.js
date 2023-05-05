@@ -4,9 +4,12 @@ import Comment from "../models/Comment.js";
 
 export const getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find()
+    const posts = await Post.find({
+      $or: [{ status: "pending" }, { status: "approved" }],
+    })
       .populate("author")
-      .populate({ path: "comments", populate: { path: "user" } });
+      .populate({ path: "comments", populate: { path: "user" } })
+      .sort({ createdAt: -1 });
     res.status(200).json(posts);
   } catch (error) {
     res.status(404).json({ message: error.message });

@@ -19,6 +19,7 @@ import { verifyTokenAdmin } from "./middleware/authAdminToken.js";
 
 import { addNewPost, approvePost, rejectPost } from "./controllers/posts.js";
 import { updatePostImage } from "./controllers/posts.js";
+import { updateImage } from "./controllers/auth.js";
 
 /* configurations */
 dotenv.config();
@@ -75,6 +76,14 @@ app.put(
   uploader.single("imageURL"),
   imageHandlingMiddleware,
   updatePostImage
+);
+// profile image update
+app.put(
+  "/api/auth/updateProfileImage",
+  verifyTokenUser,
+  uploader.single("imageURL"),
+  imageHandlingMiddleware,
+  updateImage
 );
 /* Routes */
 app.use("/api/auth", authRouter);
