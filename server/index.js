@@ -22,6 +22,9 @@ import { verifyTokenAdmin } from "./middleware/authAdminToken.js";
 
 import { addNewPost } from "./controllers/posts.js";
 import { addNewEvent } from "./controllers/compevents.js";
+import { addNewPost, approvePost, rejectPost } from "./controllers/posts.js";
+import { updatePostImage } from "./controllers/posts.js";
+import { updateImage } from "./controllers/auth.js";
 
 /* configurations */
 dotenv.config();
@@ -89,6 +92,30 @@ app.use("/api/posts", verifyTokenUser, postsRouter);
 app.use("/api/events", verifyTokenUser, event_router);
 app.use("/api/compevents", verifyTokenUser, cmpevent_router);
 
+app.put(
+  "/api/posts/updatePostImage/:id",
+  verifyTokenUser,
+  uploader.single("imageURL"),
+  imageHandlingMiddleware,
+  updatePostImage
+);
+app.put(
+  "/api/auth/updateProfileImage",
+  verifyTokenUser,
+  uploader.single("imageURL"),
+  imageHandlingMiddleware,
+  updateImage
+);
+/* Routes */
+app.use("/api/auth", authRouter);
+app.use("/api/users", usersRouter);
+app.use("/api/posts", postsRouter);
+
+//route to approve a post
+app.patch("/api/posts/approve/:id", verifyTokenAdmin, approvePost);
+
+//route to reject a post
+app.patch("/api/posts/reject/:id", verifyTokenAdmin, rejectPost);
 
 /* Mongoose setup */
 // eslint-disable-next-line no-undef

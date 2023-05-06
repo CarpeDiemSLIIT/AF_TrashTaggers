@@ -35,9 +35,15 @@ export default function AdminSidebar() {
         url="admin-dashboard/post-management"
       />
       <Divider />
+      <Selection name="User Management" url="admin-dashboard/user-management" />
+
       <Selection
-        name="User Management "
+        name="&nbsp;&nbsp;&nbsp;&nbsp;Active Users "
         url="admin-dashboard/user-management"
+      />
+      <Selection
+        name="&nbsp;&nbsp;&nbsp;&nbsp;Suspended Users"
+        url="admin-dashboard/user-management-suspend"
       />
       <Divider />
       <Selection

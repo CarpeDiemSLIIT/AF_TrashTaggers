@@ -10,7 +10,6 @@ import {
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Field, Formik } from "formik";
 import * as yup from "yup";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Dropzone from "react-dropzone";
 import FlexBetween from "../../components/customMUI/FlexBetween";
@@ -30,18 +29,11 @@ const NewPostForm = ({ handleClose }) => {
   const [error, setError] = useState("");
   const { palette } = useTheme();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { isError, message, isSuccess, isLoading } = useSelector(
     (state) => state.post
   );
 
-  useEffect(() => {
-    dispatch(reset());
-    return () => {
-      dispatch(reset());
-    };
-  }, []);
-  const newCategory = async (values, onSubmitProps) => {
+  const newPost = async (values, onSubmitProps) => {
     const formData = new FormData();
     for (let value in values) {
       formData.append(value, values[value]);
@@ -55,7 +47,7 @@ const NewPostForm = ({ handleClose }) => {
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {
-    newCategory(values, onSubmitProps);
+    newPost(values, onSubmitProps);
   };
 
   return (
@@ -92,6 +84,7 @@ const NewPostForm = ({ handleClose }) => {
                 Boolean(touched.description) && Boolean(errors.description)
               }
               helperText={touched.description && errors.description}
+              multiline
             />
 
             <Box
@@ -102,6 +95,9 @@ const NewPostForm = ({ handleClose }) => {
             >
               <Dropzone
                 acceptedFiles=".jpg,.jpeg,.png"
+                accept={{
+                  "image/png": [".png", ".jpg", ".jpeg"],
+                }}
                 multiple={false}
                 onDrop={(acceptedFiles) =>
                   setFieldValue("imageURL", acceptedFiles[0])
@@ -127,13 +123,6 @@ const NewPostForm = ({ handleClose }) => {
                 )}
               </Dropzone>
             </Box>
-            {isError && (
-              <Box>
-                <Typography variant="body1" color="red">
-                  {message}
-                </Typography>
-              </Box>
-            )}
 
             <Button
               fullWidth
@@ -145,7 +134,7 @@ const NewPostForm = ({ handleClose }) => {
                 "&:hover": { color: palette.primary.main },
               }}
             >
-              Add new Category
+              Add new Post
             </Button>
           </Box>
         </form>

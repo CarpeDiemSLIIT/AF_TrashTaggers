@@ -13,6 +13,16 @@ const login = async (userData) => {
   return response.data;
 };
 
+const register = async (userData) => {
+  const response = await axios.post(API_URL + "register", userData);
+
+  if (response.data) {
+    localStorage.setItem("user", JSON.stringify(response.data));
+  }
+
+  return response.data;
+};
+
 // Logout user
 const logout = () => {
   localStorage.removeItem("user");
@@ -22,15 +32,64 @@ const setMode = (state) => {
   localStorage.setItem("mode", state);
 };
 
-const makeMeAdmin = async () => {
-  const response = await axios.put(API_URL + "makeMeAdmin");
+const makeMeAdmin = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.put(API_URL + "makeMeAdmin", {}, config);
   return response.data;
 };
-const authService = {
-  logout,
-  login,
-  setMode,
-  makeMeAdmin,
+const refreshUser = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.get(API_URL + "getMe", config);
+
+  localStorage.setItem(
+    "user",
+    JSON.stringify({
+      token: token,
+      userData: response.data,
+    })
+  );
+
+  return response.data;
+};
+const updateImage = async (imageURL, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.put(
+    API_URL + "updateProfileImage",
+    imageURL,
+    config
+  );
+  return response.data;
 };
 
-export default authService;
+const updateUserData = async (userData, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.put(API_URL + "updateMe", userData, config);
+  return response.data;
+};
+
+export default {
+  logout,
+  login,
+  register,
+  setMode,
+  makeMeAdmin,
+  refreshUser,
+  updateImage,
+  updateUserData,
+};

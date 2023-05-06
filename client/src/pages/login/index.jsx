@@ -1,31 +1,111 @@
-import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Typography,
+  useTheme,
+  useMediaQuery,
+  Grid,
+  IconButton,
+} from "@mui/material";
 import Form from "./Form.jsx";
+import loginImage from "../../assets/image/login.jpg";
+import { Link } from "react-router-dom";
+import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
 
 const LoginPage = () => {
   const theme = useTheme();
-  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+  const isNonMobileScreens = useMediaQuery("(min-width: 1200px)");
   return (
     <Box>
-      <Box
-        width="100%"
-        backgroundColor={theme.palette.background.alt}
-        p="1rem 6%"
-        textAlign="center"
-      >
-        <Typography fontWeight="bold" fontSize="32px" color="primary">
-          TrashTaggers Login
-        </Typography>
-      </Box>
-
-      <Box
-        width={isNonMobileScreens ? "40%" : "93%"}
-        p="2rem"
-        m="2rem auto"
-        borderRadius="1.5rem"
-        backgroundColor={theme.palette.background.alt}
-      >
-        <Form />
-      </Box>
+      <Grid container>
+        <Grid
+          item
+          xs={0}
+          lg={7}
+          display={isNonMobileScreens ? "block" : "none"}
+        >
+          <Box
+            backgroundColor={theme.palette.background.alt}
+            height="100vh"
+            sx={{
+              width: "100%",
+              backgroundImage: `url(${loginImage})`,
+              backgroundSize: "contain",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+            }}
+          />
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          lg={5}
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+          backgroundColor={theme.palette.primary.light}
+          height="100vh"
+          position="relative"
+        >
+          {/* back button */}
+          <Box
+            component={Link}
+            to="/"
+            style={{
+              position: "absolute",
+              top: "1rem",
+              left: "1rem",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.5rem",
+              textTransform: "none",
+              textDecoration: "none",
+            }}
+          >
+            <IconButton>
+              <ArrowBackIcon />
+            </IconButton>
+            <Typography
+              fontWeight="500"
+              variant="h5"
+              sx={{
+                textTransform: "none",
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+            >
+              Back
+            </Typography>
+          </Box>
+          <Box
+            backgroundColor={theme.palette.background.alt}
+            borderRadius="1rem"
+            padding="2rem"
+          >
+            <Typography
+              fontWeight="500"
+              variant="h2"
+              sx={{ mb: "1.5rem" }}
+              textAlign="center"
+              color={theme.palette.primary.main}
+            >
+              Welcome to TrashTaggers.
+            </Typography>
+            <Form />
+            <Link to="/register">
+              <Typography
+                fontWeight="500"
+                variant="h5"
+                sx={{ mt: "1.5rem" }}
+                textAlign="center"
+              >
+                Don't have an account? Register here.
+              </Typography>
+            </Link>
+          </Box>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

@@ -84,20 +84,22 @@ export default function Form() {
           <Box
             display="grid"
             gap="30px"
-            gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+            gridTemplateColumns="repeat(2, minmax(0, 1fr))"
             sx={{
-              "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+              "& > div": { gridColumn: isNonMobile ? undefined : "span 2" },
             }}
           >
             <TextField
               label="Email"
+              type="email"
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.email}
               name="email"
               error={Boolean(touched.email) && Boolean(errors.email)}
               helperText={touched.email && errors.email}
-              sx={{ gridColumn: "span 4" }}
+              sx={{ gridColumn: "span 2" }}
+              style={{ width: "100%", margin: "auto" }}
             />
             <TextField
               label="Password"
@@ -108,7 +110,8 @@ export default function Form() {
               name="password"
               error={Boolean(touched.password) && Boolean(errors.password)}
               helperText={touched.password && errors.password}
-              sx={{ gridColumn: "span 4" }}
+              sx={{ gridColumn: "span 2" }}
+              style={{ width: "100%", margin: "auto" }}
             />
           </Box>
           {/* BUTTONS */}

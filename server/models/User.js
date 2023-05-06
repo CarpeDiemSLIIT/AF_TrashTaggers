@@ -15,6 +15,12 @@ const adminSchema = mongoose.Schema(
       min: 2,
       max: 50,
     },
+    status: {
+      type: String,
+      required: true,
+      default: "active",
+    },
+
     email: {
       type: String,
       required: true,
@@ -30,6 +36,10 @@ const adminSchema = mongoose.Schema(
       required: true,
       enum: ["user", "admin"],
       default: "user",
+    },
+    bio: {
+      type: String,
+      default: "",
     },
     imageURL: {
       type: String,
@@ -48,18 +58,7 @@ const adminSchema = mongoose.Schema(
         type: String,
       },
     ],
-    posts: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Post",
-      },
-    ],
-    events: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Event",
-      },
-    ],
+
     friends: {
       type: Array,
       default: [],

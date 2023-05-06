@@ -7,10 +7,12 @@ export default defineConfig({
 
   server: {
     port: 3000,
-    proxy: {
-      "/assets": {
-        target: "http://localhost:4101",
-      },
-    },
+    // proxy: {
+    //   "/api": {
+    //     target: "http://192.168.1.2:3001",
+    //     changeOrigin: true,
+    //     secure: false,
+    //   },
+    // },
   },
 });

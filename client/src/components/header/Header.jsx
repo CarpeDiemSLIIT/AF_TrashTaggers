@@ -1,12 +1,19 @@
-import { DarkMode, LightMode, Notifications } from "@mui/icons-material";
-import { Avatar, Box, Button, IconButton, useTheme } from "@mui/material";
+import { DarkMode, LightMode } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  IconButton,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, logout } from "../../features/auth/authSlice";
-import logo from "../../assets/ayusha.svg";
+import logo from "../../assets/logo.svg";
 import FlexBetween from "../customMUI/FlexBetween";
 import { useNavigate } from "react-router-dom";
 import AccountMenu from "./AccountMenu";
-
+import HowToRegIcon from "@mui/icons-material/HowToReg";
+import LoginIcon from "@mui/icons-material/Login";
 const Header = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -17,9 +24,14 @@ const Header = () => {
   const alt = theme.palette.background.alt;
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
   return (
-    <FlexBetween backgroundColor={alt} paddingX="2rem">
+    <FlexBetween
+      backgroundColor={alt}
+      paddingX={isNonMobileScreens ? "5%" : "1%"}
+      paddingY="0.25rem"
+    >
       <Box
         sx={{
           "&:hover": {
@@ -28,9 +40,19 @@ const Header = () => {
         }}
         onClick={() => navigate("/")}
       >
-        <img src={logo} alt="logo" height="40px" />
+        <img src={logo} alt="logo" height="55px" />
       </Box>
       <FlexBetween>
+        {user && user.userData.role === "admin" && (
+          <Button
+            variant="outlined"
+            onClick={() => {
+              navigate("/admin-dashboard");
+            }}
+          >
+            Admin Dashboard
+          </Button>
+        )}
         <IconButton
           onClick={() => dispatch(setMode())}
           sx={{ fontSize: "25px" }}
@@ -44,24 +66,6 @@ const Header = () => {
 
         {user ? (
           <>
-            {user.userData.role === "admin" && (
-              <Button
-                variant="outlined"
-                onClick={() => {
-                  navigate("/admin-dashboard");
-                }}
-              >
-                Admin Dashboard
-              </Button>
-            )}
-            <IconButton
-              onClick={() => {
-                navigate("/profile");
-              }}
-              sx={{ fontSize: "25px" }}
-            >
-              <Notifications sx={{ color: dark, fontSize: "25px" }} />
-            </IconButton>
             <AccountMenu />
           </>
         ) : (
@@ -71,16 +75,18 @@ const Header = () => {
               onClick={() => {
                 navigate("/login");
               }}
+              startIcon={<LoginIcon sx={{ color: "primary" }} />}
             >
-              Log In
+              {isNonMobileScreens && "Log In"}
             </Button>
             <Button
               variant="text"
               onClick={() => {
                 navigate("/register");
               }}
+              startIcon={<HowToRegIcon sx={{ color: "primary" }} />}
             >
-              Sign Up
+              {isNonMobileScreens && "Sign Up"}
             </Button>
           </>
         )}
@@ -90,53 +96,3 @@ const Header = () => {
 };
 
 export default Header;
-
-// function Profile() {
-//   const dispatch = useDispatch();
-//   const user = useSelector((state) => state.auth.user.userData);
-//   console.log(user);
-//   const [anchorEl, setAnchorEl] = useState(null);
-//   const open = Boolean(anchorEl);
-//   const handleClick = (event) => {
-//     setAnchorEl(event.currentTarget);
-//   };
-//   const handleClose = () => {
-//     setAnchorEl(null);
-//   };
-//   return (
-//     <>
-//       <IconButton
-//         id="basic-button"
-//         aria-controls={open ? "basic-menu" : undefined}
-//         aria-haspopup="true"
-//         aria-expanded={open ? "true" : undefined}
-//         onClick={handleClick}
-//       >
-//         <Avatar
-//           alt={user.firstName}
-//           src={user.ImageURL ? user.ImageURL : ""}
-//           // src="/static/images/avatar/1.jpg"
-//           // sx={{ width: 56, height: 56 }}
-//         />
-//       </IconButton>
-//       {user.firstName}
-//       <Menu
-//         id="basic-menu"
-//         anchorEl={anchorEl}
-//         open={open}
-//         onClose={handleClose}
-//         MenuListProps={{
-//           "aria-labelledby": "basic-button",
-//         }}
-//       >
-//         <MenuItem
-//           onClick={() => {
-//             dispatch(logout());
-//           }}
-//         >
-//           Logout
-//         </MenuItem>
-//       </Menu>
-//     </>
-//   );
-// }
