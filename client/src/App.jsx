@@ -12,6 +12,8 @@ import Login from "./pages/login";
 import Profile from "./pages/profile";
 import Feed from "./pages/feed";
 import Events from "./pages/events";
+import Join from "./pages/events/join";
+import MyEvents from "./pages/events/myEvents";
 import Register from "./pages/register";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
@@ -72,6 +74,8 @@ function App() {
                 <Route path="event-management" element={<EventManagement />} />
               </Route>
               <Route path="events" element={<Events />} />
+              <Route path="join" element={<Join />} />
+              <Route path="myevents" element={<MyEvents />} />
               <Route path="" element={<Feed />} />
             </Route>
             {/* <Route path="*" element={<Navigate to="/" />} /> */}

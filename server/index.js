@@ -13,10 +13,15 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import authRouter from "./routes/auth.js";
 import usersRouter from "./routes/users.js";
 import postsRouter from "./routes/posts.js";
+import event_router from "./routes/events.js";
+import cmpevent_router from "./routes/compevents.js";
+
 
 import { verifyTokenUser } from "./middleware/authUserToken.js";
 import { verifyTokenAdmin } from "./middleware/authAdminToken.js";
 
+import { addNewPost } from "./controllers/posts.js";
+import { addNewEvent } from "./controllers/compevents.js";
 import { addNewPost, approvePost, rejectPost } from "./controllers/posts.js";
 import { updatePostImage } from "./controllers/posts.js";
 import { updateImage } from "./controllers/auth.js";
@@ -70,6 +75,23 @@ app.post(
   imageHandlingMiddleware,
   addNewPost
 );
+
+app.post(
+  "/api/compevents/new",
+  verifyTokenUser,
+  uploader.single("imageURL"),
+  imageHandlingMiddleware,
+  addNewEvent
+);
+
+
+/* Routes */
+app.use("/api/auth", authRouter);
+app.use("/api/users", verifyTokenAdmin, usersRouter);
+app.use("/api/posts", verifyTokenUser, postsRouter);
+app.use("/api/events", verifyTokenUser, event_router);
+app.use("/api/compevents", verifyTokenUser, cmpevent_router);
+
 app.put(
   "/api/posts/updatePostImage/:id",
   verifyTokenUser,
@@ -77,7 +99,6 @@ app.put(
   imageHandlingMiddleware,
   updatePostImage
 );
-// profile image update
 app.put(
   "/api/auth/updateProfileImage",
   verifyTokenUser,

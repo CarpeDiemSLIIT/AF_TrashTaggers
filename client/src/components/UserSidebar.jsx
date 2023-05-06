@@ -70,6 +70,11 @@ export default function Sidebar() {
         </Typography>
       </Box>
       <Divider />
+      <Selection name="Events" url="events" />
+      <Divider />
+      <Selection name="Join" url="join" />
+      <Divider />
+      <Selection name=" My Events" url="myevents" />
       <Box
         width="100%"
         onClick={() => {
