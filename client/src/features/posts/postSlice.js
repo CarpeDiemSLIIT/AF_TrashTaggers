@@ -31,7 +31,9 @@ export const getAllPostsAdmin = createAsyncThunk(
   "post/getAllPostsAdmin",
   async (_, thunkAPI) => {
     try {
-      return await postService.getAllPostsAdmin();
+      const token = thunkAPI.getState().auth.user.token;
+
+      return await postService.getAllPostsAdmin(token);
     } catch (error) {
       const message =
         (error.response &&

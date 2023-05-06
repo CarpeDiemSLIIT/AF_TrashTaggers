@@ -11,14 +11,18 @@ const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
   lastName: yup.string().required("required"),
   email: yup.string().required("required"),
-  password: yup.string().min(8, "Password must be 8 characters long"),
+  password: yup
+    .string()
+    .min(8, "Password must be 8 characters long")
+    .required("required"),
   // .matches(/[0-9]/, "Password requires a number")
   // .matches(/[a-z]/, "Password requires a lowercase letter")
   // .matches(/[A-Z]/, "Password requires an uppercase letter")
   // .matches(/[^\w]/, "Password requires a symbol"),
   confirmPassword: yup
     .string()
-    .oneOf([yup.ref("password"), null], 'Must match "password" field value'),
+    .oneOf([yup.ref("password"), null], 'Must match "password" field value')
+    .required("required"),
 });
 
 const initialValuesRegister = {

@@ -14,7 +14,7 @@ const registerSchema = yup.object().shape({
   bio: yup.string(),
 });
 
-const EditProfileForm = () => {
+const EditProfileForm = ({ handleClose }) => {
   const user = useSelector((state) => state.auth.user.userData);
   const dispatch = useDispatch();
 
@@ -26,6 +26,7 @@ const EditProfileForm = () => {
   };
   const handleFormSubmit = (values) => {
     dispatch(updateUserData(values));
+    handleClose();
   };
   const { palette } = useTheme();
 

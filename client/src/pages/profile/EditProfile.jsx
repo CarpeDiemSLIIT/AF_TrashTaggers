@@ -57,7 +57,7 @@ const EditProfile = () => {
           </IconButton>
         </DialogTitle>
         <DialogContent>
-          <EditProfileForm />
+          <EditProfileForm handleClose={handleClose} />
         </DialogContent>
       </Dialog>
     </>

@@ -17,7 +17,6 @@ export const addNewReport = async (req, res) => {
   const { reason } = req.body;
   const { _id } = req.user;
   const { pid } = req.params;
-  console.log(reason);
   const newReport = new Report({
     reason,
     user: _id,
@@ -27,7 +26,7 @@ export const addNewReport = async (req, res) => {
     await newReport.save();
     const newReportWithPopulate = await Report.find()
       .populate("user")
-      .populate("post");
+      .populate({ path: "post", populate: { path: "author" } });
     res.status(201).json(newReportWithPopulate);
   } catch (error) {
     res.status(409).json({ message: error.message });

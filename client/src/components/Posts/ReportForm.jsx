@@ -19,7 +19,6 @@ export default function ReportForm({ post, handleClose }) {
   const [error, setError] = useState(false);
   const [helperText, setHelperText] = useState("");
 
-
   const handleRadioChange = (event) => {
     setReason(event.target.value);
     setHelperText(" ");
@@ -28,11 +27,11 @@ export default function ReportForm({ post, handleClose }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(reason);
 
     if (reason === "") {
       setHelperText("Please select an option.");
       setError(true);
+      return;
     }
 
     //TODO: Dispatch
@@ -52,6 +51,7 @@ export default function ReportForm({ post, handleClose }) {
           id="reasons"
           onChange={handleRadioChange}
           value={reason}
+          required
         >
           <FormControlLabel
             value="Inappropriate Content"

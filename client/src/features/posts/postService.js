@@ -7,8 +7,13 @@ const getAllPosts = async () => {
   return response.data;
 };
 
-const getAllPostsAdmin = async () => {
-  const response = await axios.get(API_URL + "all/admin");
+const getAllPostsAdmin = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.get(API_URL + "all/admin",config);
   return response.data;
 };
 

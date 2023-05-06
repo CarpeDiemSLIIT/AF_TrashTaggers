@@ -62,183 +62,191 @@ function Row({ report, index }) {
 
   return (
     <>
-      <TableRow
-        key={report._id}
-        sx={{ "& > *": { borderBottom: "unset" } }}
-        onClick={() => setOpen(!open)}
-      >
-        <TableCell component="th" scope="row">
-          {index + 1}
-        </TableCell>
-        <TableCell align="center">{report.reason}</TableCell>
-
-        {report.post.author !== null ? (
-          <TableCell align="center">
-            {report.user.firstName} {report.user.lastName}
+      <>
+        <TableRow
+          key={report._id}
+          sx={{ "& > *": { borderBottom: "unset" } }}
+          onClick={() => setOpen(!open)}
+        >
+          <TableCell component="th" scope="row">
+            {index + 1}
           </TableCell>
-        ) : null}
-        <TableCell align="center">
-          {report.status === "pending" ? (
-            <Chip label="Pending" color="info" variant="outlined" />
-          ) : (
-            <Chip label="Resolved" color="primary" variant="filled" />
-          )}
-        </TableCell>
-        <TableCell align="center">
-          <IconButton aria-label="expand row" size="small">
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell
-          style={{
-            paddingBottom: 0,
-            paddingTop: 0,
-            paddingLeft: 0,
-            paddingRight: 0,
-          }}
-          colSpan={6}
-        ></TableCell>
-      </TableRow>
-      <TableRow key={report.post.description}>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                Post
-              </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="center">Image</TableCell>
-                    <TableCell align="center">Created User</TableCell>
-                    <TableCell align="center">Description</TableCell>
-                    <TableCell align="center">Action</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell component="th" align="center" scope="row">
-                      <img
-                        src={`${report.post.imageURL}`}
-                        alt="Post Image"
-                        width="200px"
-                        height="200px"
-                      />
-                    </TableCell>
-                    {report.post.author !== null ? (
-                      <TableCell align="center">
-                        {report.post.author.firstName}{" "}
-                        {report.post.author.lastName}
-                      </TableCell>
-                    ) : null}
-                    <TableCell align="center">
-                      {report.post.description}
-                    </TableCell>
-                    <TableCell align="center">
-                      <IconButton
-                        aria-label="Approve"
-                        color="error"
-                        title="Suspend Creator"
-                        onClick={() => {
-                          if (report.status !== "resolved") {
-                            setReportID(report._id);
-                            setCreatorID(report.post.author._id);
-                            setOpen2(true);
-                          } else {
-                            setOpen3(true);
-                          }
-                        }}
-                      >
-                        <PersonOffIcon />
-                      </IconButton>
-                      <BanCreator
-                        open={open2}
-                        handleClose={handleClose2}
-                        reportID={reportID}
-                        authorID={creatorID}
-                      />
-                      <IconButton
-                        aria-label="Reject"
-                        color="error"
-                        title="Remove Post"
-                        onClick={() => {
-                          if (report.status !== "resolved") {
-                            setPostID(report.post._id);
-                            setReportID(report._id);
-                            setOpen4(true);
-                          } else {
-                            setOpen3(true);
-                          }
-                        }}
-                      >
-                        <DoDisturbIcon />
-                      </IconButton>
-                      <RemovePost
-                        open={open4}
-                        handleClose={handleClose4}
-                        postID={postID}
-                        reportID={reportID}
-                      />
+          <TableCell align="center">{report.reason}</TableCell>
 
-                      <Snackbar
-                        open={open3}
-                        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                        autoHideDuration={2000}
-                        onClose={handleClose3}
-                      >
-                        <Alert
-                          onClose={handleClose3}
-                          severity="error"
-                          sx={{ width: "100%" }}
-                        >
-                          This report is already Resolved ✅
-                        </Alert>
-                      </Snackbar>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  alignItems: "flex-end",
-                  marginTop: "1%",
-                }}
-              >
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    if (report.status !== "resolved") {
-                      setReportID(report._id);
-                      setOpen1(true);
-                    } else {
-                      setOpen3(true);
-                    }
-                  }}
-                >
-                  <h3>Resolved</h3>
-                </Button>
-                <ResolvedReport
-                  open={open1}
-                  handleClose={handleClose1}
-                  reportId={reportID}
-                />
-              </Box>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
+          {report.user.firstName !== null ? (
+            <TableCell align="center">
+              {report.user.firstName} {report.user.lastName}
+            </TableCell>
+          ) : null}
+          <TableCell align="center">
+            {report.status === "pending" ? (
+              <Chip label="Pending" color="info" variant="outlined" />
+            ) : (
+              <Chip label="Resolved" color="primary" variant="filled" />
+            )}
+          </TableCell>
+          <TableCell align="center">
+            <IconButton aria-label="expand row" size="small">
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell
+            style={{
+              paddingBottom: 0,
+              paddingTop: 0,
+              paddingLeft: 0,
+              paddingRight: 0,
+            }}
+            colSpan={6}
+          ></TableCell>
+        </TableRow>
+        <TableRow key={report.user._id}>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              {report.post ? (
+                <Box sx={{ margin: 1 }}>
+                  <Typography variant="h6" gutterBottom component="div">
+                    Post
+                  </Typography>
+                  <Table size="small" aria-label="purchases">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell align="center">Image</TableCell>
+                        <TableCell align="center">Created User</TableCell>
+                        <TableCell align="center">Description</TableCell>
+                        <TableCell align="center">Action</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell component="th" align="center" scope="row">
+                          <img
+                            src={`${report.post.imageURL}`}
+                            alt="Post Image"
+                            width="200px"
+                            height="200px"
+                          />
+                        </TableCell>
+                        {report.post.author !== null ? (
+                          <TableCell align="center">
+                            {report.post.author.firstName}{" "}
+                            {report.post.author.lastName}
+                          </TableCell>
+                        ) : null}
+                        <TableCell align="center">
+                          {report.post.description}
+                        </TableCell>
+
+                        <TableCell align="center">
+                          <IconButton
+                            aria-label="Approve"
+                            color="error"
+                            title="Suspend Creator"
+                            onClick={() => {
+                              if (report.status !== "resolved") {
+                                setReportID(report._id);
+                                setCreatorID(report.post.author._id);
+                                setOpen2(true);
+                              } else {
+                                setOpen3(true);
+                              }
+                            }}
+                          >
+                            <PersonOffIcon />
+                          </IconButton>
+                          <BanCreator
+                            open={open2}
+                            handleClose={handleClose2}
+                            reportID={reportID}
+                            authorID={creatorID}
+                          />
+                          <IconButton
+                            aria-label="Reject"
+                            color="error"
+                            title="Remove Post"
+                            onClick={() => {
+                              if (report.status !== "resolved") {
+                                setPostID(report.post._id);
+                                setReportID(report._id);
+                                setOpen4(true);
+                              } else {
+                                setOpen3(true);
+                              }
+                            }}
+                          >
+                            <DoDisturbIcon />
+                          </IconButton>
+                          <RemovePost
+                            open={open4}
+                            handleClose={handleClose4}
+                            postID={postID}
+                            reportID={reportID}
+                          />
+
+                          <Snackbar
+                            open={open3}
+                            anchorOrigin={{
+                              vertical: "top",
+                              horizontal: "center",
+                            }}
+                            autoHideDuration={2000}
+                            onClose={handleClose3}
+                          >
+                            <Alert
+                              onClose={handleClose3}
+                              severity="error"
+                              sx={{ width: "100%" }}
+                            >
+                              This report is already Resolved ✅
+                            </Alert>
+                          </Snackbar>
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      alignItems: "flex-end",
+                      marginTop: "1%",
+                    }}
+                  >
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        if (report.status !== "resolved") {
+                          setReportID(report._id);
+                          setOpen1(true);
+                        } else {
+                          setOpen3(true);
+                        }
+                      }}
+                    >
+                      <h3>Resolved</h3>
+                    </Button>
+                    <ResolvedReport
+                      open={open1}
+                      handleClose={handleClose1}
+                      reportId={reportID}
+                    />
+                  </Box>
+                </Box>
+              ) : (
+                <Typography align="center">Post Not Found </Typography>
+              )}
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      </>
     </>
   );
 }
 
 const ReportManagement = () => {
   const { reports, isLoading, isError } = useSelector((state) => state.report);
-
-  console.log(reports);
 
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
