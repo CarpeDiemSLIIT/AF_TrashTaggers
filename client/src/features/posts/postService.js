@@ -7,6 +7,11 @@ const getAllPosts = async () => {
   return response.data;
 };
 
+const getAllPostsAdmin = async () => {
+  const response = await axios.get(API_URL + "all/admin");
+  return response.data;
+};
+
 const addNewPost = async (post, token) => {
   const config = {
     headers: {
@@ -116,4 +121,5 @@ export default {
   updatePostImage,
   approveNewPost,
   rejectNewPost,
+  getAllPostsAdmin,
 };

@@ -5,6 +5,7 @@ import {
   getSuspendAll,
   suspendUser,
   reActiveUser,
+  getAllFull,
   getProfile,
   getTop10Users,
 } from "../controllers/users.js";
@@ -18,6 +19,7 @@ router.route("/top-ten-users").get(getTop10Users);
 
 //for admin things
 router.use(verifyTokenAdmin).route("/all").get(getAll);
+router.use(verifyTokenAdmin).route("/all/full").get(getAllFull);
 router.use(verifyTokenAdmin).route("/allSuspend").get(getSuspendAll);
 router.use(verifyTokenAdmin).route("/suspendUser/:id").patch(suspendUser);
 router.use(verifyTokenAdmin).route("/reActiveUser/:id").patch(reActiveUser);

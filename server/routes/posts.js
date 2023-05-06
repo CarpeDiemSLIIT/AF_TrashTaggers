@@ -1,12 +1,19 @@
 import express from "express";
-import { getAllPosts, deletePost, updatePost } from "../controllers/posts.js";
+import {
+  getAllPosts,
+  deletePost,
+  updatePost,
+  getAllPostsAdmin,
+} from "../controllers/posts.js";
 import { upVotePost, downVotePost } from "../controllers/postVote.js";
 import { verifyTokenUser } from "../middleware/authUserToken.js";
 import { newComment } from "../controllers/comment.js";
 
 const router = express.Router();
-//for both
+//for user
 router.route("/all").get(getAllPosts);
+//for admin
+router.route("/all/admin").get(getAllPostsAdmin);
 
 //for user
 router.route("/update/:id").put(verifyTokenUser, updatePost);

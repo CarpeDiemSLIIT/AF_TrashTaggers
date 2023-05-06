@@ -8,6 +8,10 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { useNavigate } from "react-router-dom";
+import * as React from "react";
+import PropTypes from "prop-types";
+import { styled } from "@mui/material/styles";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Delete,
   Edit,
@@ -31,6 +35,7 @@ import {
 
 import { deletePost } from "../../features/posts/postSlice";
 import EditPostFrom from "./EditPostFrom";
+import ReportForm from "./ReportForm";
 
 export default function PostMenu({ authorId, post }) {
   const dispatch = useDispatch();
@@ -45,6 +50,63 @@ export default function PostMenu({ authorId, post }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  //For Report Part
+  const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+    "& .MuiDialogContent-root": {
+      padding: theme.spacing(2),
+    },
+    "& .MuiDialogActions-root": {
+      padding: theme.spacing(1),
+    },
+  }));
+
+  function BootstrapDialogTitle(props) {
+    const { children, onClose, ...other } = props;
+
+    return (
+      <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+        {children}
+        {onClose ? (
+          <IconButton
+            aria-label="close"
+            onClick={onClose}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        ) : null}
+      </DialogTitle>
+    );
+  }
+
+  BootstrapDialogTitle.propTypes = {
+    children: PropTypes.node,
+    onClose: PropTypes.func.isRequired,
+  };
+
+  const [isDialogOpenReport, setIsDialogOpenReport] = useState(false);
+  const handleReportClick = () => {
+    if (!user) {
+      navigate("/login");
+    }
+
+    setIsDialogOpenReport(true);
+  };
+
+  const handleReportConfirm = () => {
+    setIsDialogOpenReport(false);
+  };
+
+  const handleReportClose = () => {
+    setIsDialogOpenReport(false);
+  };
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleDeleteClick = () => {
@@ -122,7 +184,11 @@ export default function PostMenu({ authorId, post }) {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem
+          onClick={() => {
+            handleReportClick();
+          }}
+        >
           <ListItemIcon>
             <Flag fontSize="small" />
           </ListItemIcon>
@@ -187,6 +253,24 @@ export default function PostMenu({ authorId, post }) {
           <EditPostFrom handleClose={handleCloseEdit} post={post} />
         </DialogContent>
       </Dialog>
+
+      <BootstrapDialog
+        onClose={handleReportClose}
+        aria-labelledby="customized-dialog-title"
+        open={isDialogOpenReport}
+        width="100px"
+      >
+        <BootstrapDialogTitle
+          id="customized-dialog-title"
+          onClose={handleReportClose}
+          sx={{ textAlign: "center" }}
+        >
+          🚩 Report this Post 🚩
+        </BootstrapDialogTitle>
+        <DialogContent dividers>
+          <ReportForm post={post} handleClose={handleReportConfirm} />
+        </DialogContent>
+      </BootstrapDialog>
     </>
   );
 }
