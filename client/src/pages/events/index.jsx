@@ -1,11 +1,18 @@
 
 import React, { useEffect } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Backdrop,
+  Box,
+  CircularProgress,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import NewEvent from "./NewEvent";
 import WidgetWrapper from "../../components/customMUI/WidgetWrapper";
-import { getAllCevents } from "../../features/cevents/ceventSlice";
+import { getAllCevents , reset } from "../../features/cevents/ceventSlice";
 import { useSelector, useDispatch } from "react-redux";
 import NewCevent from "./newCevent";
+import Cevent from "../../components/Events/Cevent";
 
 
 
@@ -19,21 +26,28 @@ const dispatch = useDispatch();
   );
   useEffect(() => {
     dispatch(getAllCevents());
+    return () => {
+      reset();
+    };
   }, []);
 
-
+  const theme = useTheme();
 
   return(
     
     <Box display="flex" flexDirection="column" gap="1rem">
-    <WidgetWrapper>
-      <NewCevent />
-    </WidgetWrapper>
-    {cevents.map((cevent) => (
-      <WidgetWrapper>
-        <Typography>{cevent.description}</Typography>
-      </WidgetWrapper>
-    ))}
+    <Box
+        padding="0"
+        margin="0"
+        sx={{
+          padding: "1.5rem 1.5rem 1.5rem 1.5rem",
+          backgroundColor: theme.palette.background.alt,
+          borderRadius: "0.75rem",
+        }}
+      >
+        <NewCevent />
+      </Box>
+    {cevents.map((cevent) => <Cevent event={cevent} key={cevent._id} />)}
   </Box>
   ); 
 };

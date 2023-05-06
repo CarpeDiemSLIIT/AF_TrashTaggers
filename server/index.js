@@ -20,7 +20,6 @@ import cmpevent_router from "./routes/compevents.js";
 import { verifyTokenUser } from "./middleware/authUserToken.js";
 import { verifyTokenAdmin } from "./middleware/authAdminToken.js";
 
-import { addNewPost } from "./controllers/posts.js";
 import { addNewEvent } from "./controllers/compevents.js";
 import { addNewPost, approvePost, rejectPost } from "./controllers/posts.js";
 import { updatePostImage } from "./controllers/posts.js";

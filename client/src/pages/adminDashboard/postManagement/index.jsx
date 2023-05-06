@@ -187,7 +187,7 @@ function Row({ post, index }) {
   );
 }
 
-const PostManagement = () => {
+const EventManagement = () => {
   const { posts, isLoading, isError } = useSelector((state) => state.post);
 
   const dispatch = useDispatch();
@@ -260,4 +260,4 @@ const PostManagement = () => {
   );
 };
 
-export default PostManagement;
+export default EventManagement;

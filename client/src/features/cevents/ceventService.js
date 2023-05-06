@@ -21,7 +21,33 @@ const addNewCevent = async (cevent, token) => {
   return response.data;
 };
 
+
+const deleteCevent = async (id, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.delete(API_URL + `${id}`, config);
+  return response.data;
+};
+
+const updateCevent = async (post, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.put(API_URL + `${post.id}`, post, config);
+
+  return response.data;
+};
+
+
+
 export default {
   getAllCevents,
   addNewCevent,
+  deleteCevent,
+  updateCevent
 };
