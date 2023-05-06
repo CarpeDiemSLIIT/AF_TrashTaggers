@@ -24,6 +24,7 @@ import SuspendedUsers from "./pages/adminDashboard/userManagement/suspendUser";
 import PostManagement from "./pages/adminDashboard/postManagement";
 import EventManagement from "./pages/adminDashboard/eventManagement";
 import AuthorProfile from "./pages/authorProfile";
+import ReportManagement from "./pages/adminDashboard/reportManagement";
 
 function App() {
   const { user, mode } = useSelector((state) => state.auth);
@@ -63,10 +64,18 @@ function App() {
                   )
                 }
               >
+                <Route
+                  index
+                  element={<Navigate to="/admin-dashboard/post-management" />}
+                />
                 <Route path="user-management" element={<UserManagement />} />
                 <Route
                   path="user-management-suspend"
                   element={<SuspendedUsers />}
+                />
+                <Route
+                  path="/admin-dashboard/report-management"
+                  element={<ReportManagement />}
                 />
                 <Route path="post-management" element={<PostManagement />} />
                 <Route path="event-management" element={<EventManagement />} />

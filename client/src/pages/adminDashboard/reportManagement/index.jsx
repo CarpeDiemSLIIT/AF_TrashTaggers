@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Alert,
   Backdrop,
+  Button,
   Chip,
   CircularProgress,
   Snackbar,
@@ -22,34 +23,39 @@ import Paper from "@mui/material/Paper";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getAllPosts,
-  getAllPostsAdmin,
-} from "../../../features/posts/postSlice";
+import { getAllPosts } from "../../../features/posts/postSlice";
 import DoDisturbIcon from "@mui/icons-material/DoDisturb";
-import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
+import PersonOffIcon from "@mui/icons-material/PersonOff";
 import ApprovePost from "../../../components/confirmation/approvePost";
 import RejectPost from "../../../components/confirmation/rejectPost";
+import { getAllReports } from "../../../features/report/reportSlice";
+import ResolvedReport from "../../../components/confirmation/resolved";
+import ConfirmSuspend from "../../../components/confirmation";
+import BanCreator from "../../../components/confirmation/banCreator";
+import RemovePost from "../../../components/confirmation/removePost";
 
-function Row({ post, index }) {
+function Row({ report, index }) {
   const [open, setOpen] = useState(false);
+  const [reportID, setReportID] = useState("");
+  const [creatorID, setCreatorID] = useState("");
   const [postID, setPostID] = useState("");
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [open3, setOpen3] = useState(false);
   const [open4, setOpen4] = useState(false);
 
-  const handleClose = () => {
+  const handleClose1 = () => {
     setOpen1(false);
   };
 
-  const handleClose1 = () => {
+  const handleClose2 = () => {
     setOpen2(false);
   };
 
   const handleClose3 = () => {
     setOpen3(false);
   };
+
   const handleClose4 = () => {
     setOpen4(false);
   };
@@ -57,27 +63,25 @@ function Row({ post, index }) {
   return (
     <>
       <TableRow
-        key={post._id}
+        key={report._id}
         sx={{ "& > *": { borderBottom: "unset" } }}
         onClick={() => setOpen(!open)}
       >
         <TableCell component="th" scope="row">
           {index + 1}
         </TableCell>
-        <TableCell align="center">{post.description}</TableCell>
+        <TableCell align="center">{report.reason}</TableCell>
 
-        {post.author !== null ? (
+        {report.post.author !== null ? (
           <TableCell align="center">
-            {post.author.firstName} {post.author.lastName}
+            {report.user.firstName} {report.user.lastName}
           </TableCell>
         ) : null}
         <TableCell align="center">
-          {post.status === "pending" ? (
+          {report.status === "pending" ? (
             <Chip label="Pending" color="info" variant="outlined" />
-          ) : post.status === "deleted" ? (
-            <Chip label="Deleted" color="error" variant="outlined" />
           ) : (
-            <Chip label="Approved" color="primary" variant="filled" />
+            <Chip label="Resolved" color="primary" variant="filled" />
           )}
         </TableCell>
         <TableCell align="center">
@@ -97,7 +101,7 @@ function Row({ post, index }) {
           colSpan={6}
         ></TableCell>
       </TableRow>
-      <TableRow key={post.description}>
+      <TableRow key={report.post.description}>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
@@ -108,7 +112,7 @@ function Row({ post, index }) {
                 <TableHead>
                   <TableRow>
                     <TableCell align="center">Image</TableCell>
-                    <TableCell align="center">User</TableCell>
+                    <TableCell align="center">Created User</TableCell>
                     <TableCell align="center">Description</TableCell>
                     <TableCell align="center">Action</TableCell>
                   </TableRow>
@@ -117,51 +121,53 @@ function Row({ post, index }) {
                   <TableRow>
                     <TableCell component="th" align="center" scope="row">
                       <img
-                        src={`${post.imageURL}`}
+                        src={`${report.post.imageURL}`}
                         alt="Post Image"
                         width="200px"
                         height="200px"
                       />
                     </TableCell>
-                    {post.author !== null ? (
+                    {report.post.author !== null ? (
                       <TableCell align="center">
-                        {post.author.firstName} {post.author.lastName}
+                        {report.post.author.firstName}{" "}
+                        {report.post.author.lastName}
                       </TableCell>
                     ) : null}
-                    <TableCell align="center">{post.description}</TableCell>
+                    <TableCell align="center">
+                      {report.post.description}
+                    </TableCell>
                     <TableCell align="center">
                       <IconButton
                         aria-label="Approve"
-                        color="primary"
-                        title="Approve"
+                        color="error"
+                        title="Suspend Creator"
                         onClick={() => {
-                          if (post.status === "deleted") {
-                            setOpen4(true);
-                          } else if (post.status === "pending") {
-                            setPostID(post._id);
-                            setOpen1(true);
+                          if (report.status !== "resolved") {
+                            setReportID(report._id);
+                            setCreatorID(report.post.author._id);
+                            setOpen2(true);
                           } else {
                             setOpen3(true);
                           }
                         }}
                       >
-                        <DoneOutlineIcon />
+                        <PersonOffIcon />
                       </IconButton>
-                      <ApprovePost
-                        open={open1}
-                        handleClose={handleClose}
-                        postId={postID}
+                      <BanCreator
+                        open={open2}
+                        handleClose={handleClose2}
+                        reportID={reportID}
+                        authorID={creatorID}
                       />
                       <IconButton
                         aria-label="Reject"
                         color="error"
-                        title="Reject"
+                        title="Remove Post"
                         onClick={() => {
-                          if (post.status === "deleted") {
+                          if (report.status !== "resolved") {
+                            setPostID(report.post._id);
+                            setReportID(report._id);
                             setOpen4(true);
-                          } else if (post.status === "pending") {
-                            setPostID(post._id);
-                            setOpen2(true);
                           } else {
                             setOpen3(true);
                           }
@@ -169,11 +175,13 @@ function Row({ post, index }) {
                       >
                         <DoDisturbIcon />
                       </IconButton>
-                      <RejectPost
-                        open={open2}
-                        handleClose={handleClose1}
-                        postId={postID}
+                      <RemovePost
+                        open={open4}
+                        handleClose={handleClose4}
+                        postID={postID}
+                        reportID={reportID}
                       />
+
                       <Snackbar
                         open={open3}
                         anchorOrigin={{ vertical: "top", horizontal: "center" }}
@@ -185,27 +193,40 @@ function Row({ post, index }) {
                           severity="error"
                           sx={{ width: "100%" }}
                         >
-                          This post is already Approved ✅
-                        </Alert>
-                      </Snackbar>
-                      <Snackbar
-                        open={open4}
-                        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                        autoHideDuration={2000}
-                        onClose={handleClose4}
-                      >
-                        <Alert
-                          onClose={handleClose4}
-                          severity="error"
-                          sx={{ width: "100%" }}
-                        >
-                          This post is already Deleted ❌
+                          This report is already Resolved ✅
                         </Alert>
                       </Snackbar>
                     </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "flex-end",
+                  marginTop: "1%",
+                }}
+              >
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    if (report.status !== "resolved") {
+                      setReportID(report._id);
+                      setOpen1(true);
+                    } else {
+                      setOpen3(true);
+                    }
+                  }}
+                >
+                  <h3>Resolved</h3>
+                </Button>
+                <ResolvedReport
+                  open={open1}
+                  handleClose={handleClose1}
+                  reportId={reportID}
+                />
+              </Box>
             </Box>
           </Collapse>
         </TableCell>
@@ -214,13 +235,15 @@ function Row({ post, index }) {
   );
 }
 
-const PostManagement = () => {
-  const { posts, isLoading, isError } = useSelector((state) => state.post);
+const ReportManagement = () => {
+  const { reports, isLoading, isError } = useSelector((state) => state.report);
+
+  console.log(reports);
 
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
   useEffect(() => {
-    dispatch(getAllPostsAdmin());
+    dispatch(getAllReports());
   }, []);
   if (isLoading)
     return (
@@ -233,9 +256,10 @@ const PostManagement = () => {
         </Backdrop>
       </>
     );
+
   return (
     <div>
-      <h1>All Posts</h1>
+      <h1>All Reports</h1>
       <Box sx={{ gridColumn: "span 4" }}>
         <TextField
           fullWidth
@@ -257,28 +281,28 @@ const PostManagement = () => {
           <TableHead>
             <TableRow>
               <TableCell>No</TableCell>
-              <TableCell align="center">Description</TableCell>
-              <TableCell align="center">User</TableCell>
+              <TableCell align="center">Reason</TableCell>
+              <TableCell align="center">Reported User</TableCell>
               <TableCell align="center">Status</TableCell>
               <TableCell align="center">Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {posts.length === 0 && (
-              <TableRow key={posts._id}>
+            {reports.length === 0 && (
+              <TableRow key={reports._id}>
                 <TableCell colSpan={6} align="center">
-                  No Posts Found
+                  No Reports Found
                 </TableCell>
               </TableRow>
             )}
-            {posts
-              .filter((post) => {
+            {reports
+              .filter((report) => {
                 return search.toLowerCase() === ""
-                  ? post
-                  : post.description.toLowerCase().includes(search);
+                  ? report
+                  : report.reason.toLowerCase().includes(search);
               })
-              .map((post, index) => (
-                <Row key={post._id} post={post} index={index} />
+              .map((report, index) => (
+                <Row key={report._id} report={report} index={index} />
               ))}
           </TableBody>
         </Table>
@@ -287,4 +311,4 @@ const PostManagement = () => {
   );
 };
 
-export default PostManagement;
+export default ReportManagement;

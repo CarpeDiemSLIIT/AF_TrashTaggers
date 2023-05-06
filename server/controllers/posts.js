@@ -4,6 +4,17 @@ import Comment from "../models/Comment.js";
 
 export const getAllPosts = async (req, res) => {
   try {
+    const posts = await Post.find({ status: { $nin: ["deleted"] } })
+      .populate("author")
+      .populate({ path: "comments", populate: { path: "user" } });
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
+export const getAllPostsAdmin = async (req, res) => {
+  try {
     const posts = await Post.find()
       .populate("author")
       .populate({ path: "comments", populate: { path: "user" } });
@@ -132,7 +143,7 @@ export const approvePost = async (req, res) => {
 export const rejectPost = async (req, res) => {
   const { id } = req.params;
   try {
-    const posts = await Post.findByIdAndDelete(id);
+    const posts = await Post.findByIdAndUpdate(id, { status: "deleted" });
     const newPosts = await Post.find().populate("author");
     res.status(200).json(newPosts);
   } catch (err) {
