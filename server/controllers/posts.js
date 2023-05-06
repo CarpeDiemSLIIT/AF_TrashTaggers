@@ -2,11 +2,15 @@ import Post from "../models/Post.js";
 import User from "../models/User.js";
 import Comment from "../models/Comment.js";
 
+
 export const getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find({ status: { $nin: ["deleted"] } })
+    const posts = await Post.find({
+      $or: [{ status: "pending" }, { status: "approved" }],
+    })
       .populate("author")
-      .populate({ path: "comments", populate: { path: "user" } });
+      .populate({ path: "comments", populate: { path: "user" } })
+      .sort({ createdAt: -1 });
     res.status(200).json(posts);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -14,14 +18,14 @@ export const getAllPosts = async (req, res) => {
 };
 
 export const getAllPostsAdmin = async (req, res) => {
-  try {
-    const posts = await Post.find()
-      .populate("author")
-      .populate({ path: "comments", populate: { path: "user" } });
-    res.status(200).json(posts);
-  } catch (error) {
-    res.status(404).json({ message: error.message });
-  }
+  try {
+    const posts = await Post.find()
+      .populate("author")
+      .populate({ path: "comments", populate: { path: "user" } });
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
 };
 
 export const addNewPost = async (req, res) => {

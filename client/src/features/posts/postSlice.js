@@ -254,7 +254,7 @@ const postSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         toast.success("Post added successfully");
-        state.posts.push(action.payload);
+        state.posts.unshift(action.payload);
       })
       .addCase(addNewPost.rejected, (state, action) => {
         state.isLoading = false;

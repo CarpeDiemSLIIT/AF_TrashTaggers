@@ -62,3 +62,14 @@ export const getProfile = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+export const getTop10Users = async (req, res) => {
+  try {
+    const users = await User.find({ status: "active" })
+      .sort({ points: -1 })
+      .limit(10);
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

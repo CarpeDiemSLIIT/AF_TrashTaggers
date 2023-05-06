@@ -35,6 +35,7 @@ export default function AdminSidebar() {
         url="admin-dashboard/post-management"
       />
       <Divider />
+
       <Selection
         name="Report Management "
         url="admin-dashboard/report-management"
@@ -48,6 +49,7 @@ export default function AdminSidebar() {
       >
         User Management
       </Typography>
+
 
       <Selection
         name="&nbsp;&nbsp;&nbsp;&nbsp;Active Users "

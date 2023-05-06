@@ -7,7 +7,7 @@ import {
   IconButton,
 } from "@mui/material";
 import Form from "./Form.jsx";
-import registerImage from "../../assets/image/login.jpg";
+import registerImage from "../../assets/image/register.jpg";
 import { Link } from "react-router-dom";
 import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
 
@@ -88,6 +88,7 @@ const RegisterPage = () => {
               variant="h2"
               sx={{ mb: "1.5rem" }}
               textAlign="center"
+              color={theme.palette.primary.main}
             >
               Welcome to TrashTaggers.
             </Typography>

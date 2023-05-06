@@ -84,6 +84,7 @@ const NewPostForm = ({ handleClose }) => {
                 Boolean(touched.description) && Boolean(errors.description)
               }
               helperText={touched.description && errors.description}
+              multiline
             />
 
             <Box

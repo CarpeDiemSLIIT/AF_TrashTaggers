@@ -1,4 +1,11 @@
-import { Avatar, Box, Checkbox, Typography, useTheme } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Checkbox,
+  Chip,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import React, { useState } from "react";
 import { ArrowUpward, ArrowDownward } from "@mui/icons-material";
 import ReactTimeAgo from "react-time-ago";
@@ -11,6 +18,9 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import PostMenu from "./PostMenu";
 import Comments from "./Comments";
+import DoneIcon from "@mui/icons-material/Done";
+import CommentIcon from "@mui/icons-material/Comment";
+import FlexBetween from "../customMUI/FlexBetween";
 
 const Post = ({ post }) => {
   const dispatch = useDispatch();
@@ -67,7 +77,7 @@ const Post = ({ post }) => {
           onClick={() => navigate(`/user/${post.author._id}`)}
         >
           <Avatar
-            src={post.author.ImageURL ? post.author.ImageURL : ""}
+            src={post.author.imageURL ? post.author.imageURL : ""}
             sx={{ width: 32, height: 32 }}
             alt={post.author.firstName}
           />
@@ -82,7 +92,6 @@ const Post = ({ post }) => {
           <PostMenu authorId={post.author._id} post={post} />
         </Box>
       </Box>
-
       <Box>
         <Typography variant="body1">{post.description}</Typography>
       </Box>
@@ -96,45 +105,79 @@ const Post = ({ post }) => {
           }}
         />
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          width: "100px",
-          backgroundColor: theme.palette.primary.light,
-          borderRadius: "0.75rem",
-        }}
-      >
-        <Checkbox
-          icon={<ThumbUpIcon style={{ color: "#b2b2b2" }} />}
-          checkedIcon={
-            <ThumbUpIcon style={{ color: theme.palette.primary.main }} />
-          }
-          onChange={handleUpVote}
-          checked={user && post.upVotes.includes(user.userData._id)}
-        />
+      <FlexBetween>
+        <Box display="flex" gap="1rem">
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100px",
+              backgroundColor: theme.palette.primary.light,
+              borderRadius: "0.75rem",
+            }}
+          >
+            <Checkbox
+              icon={<ThumbUpIcon style={{ color: "#b2b2b2" }} />}
+              checkedIcon={
+                <ThumbUpIcon style={{ color: theme.palette.primary.main }} />
+              }
+              onChange={handleUpVote}
+              checked={user && post.upVotes.includes(user.userData._id)}
+              sx={{
+                "&:hover": {
+                  transform: "scale(1.5)",
+                },
+              }}
+            />
 
-        <Typography variant="body1">{post.netVotes}</Typography>
-        <Checkbox
-          icon={<ThumbDownIcon style={{ color: "#b2b2b2" }} />}
-          checkedIcon={
-            <ThumbDownIcon style={{ color: theme.palette.warning.main }} />
-          }
-          onChange={handleDownVote}
-          checked={user && post.downVotes.includes(user.userData._id)}
-        />
-      </Box>
-      <Box display="flex">
-        <ArrowDropDownIcon />
-        <Typography
-          variant="body1"
-          sx={{ "&:hover": { cursor: "pointer" } }}
-          onClick={() => setViewComments((state) => !state)}
-        >
-          {post.comments.length} Comments
-        </Typography>
-      </Box>
+            <Typography variant="body1">{post.netVotes}</Typography>
+            <Checkbox
+              icon={<ThumbDownIcon style={{ color: "#b2b2b2" }} />}
+              checkedIcon={
+                <ThumbDownIcon style={{ color: theme.palette.warning.main }} />
+              }
+              onChange={handleDownVote}
+              checked={user && post.downVotes.includes(user.userData._id)}
+              sx={{
+                "&:hover": {
+                  transform: "scale(1.5)",
+                },
+              }}
+            />
+          </Box>
+          <Box
+            display="flex"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-around",
+              width: "140px",
+              backgroundColor: theme.palette.primary.light,
+              borderRadius: "0.75rem",
+              padding: "0.25rem 0.5rem 0.25rem 0.5rem",
+              "&:hover": { cursor: "pointer" },
+            }}
+            onClick={() => setViewComments((state) => !state)}
+          >
+            <CommentIcon color="primary" />
+            <Typography variant="body1">
+              Comments ({post.comments.length})
+            </Typography>
+          </Box>
+        </Box>
+        {post.status === "approved" && (
+          <Box>
+            <Chip
+              label="Approved Post"
+              icon={<DoneIcon fontSize="small" />}
+              variant="outlined"
+              color="primary"
+              width="100%"
+            />
+          </Box>
+        )}
+      </FlexBetween>
 
       {viewComments && <Comments post={post} />}
     </Box>

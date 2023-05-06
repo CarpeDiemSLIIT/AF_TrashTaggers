@@ -7,6 +7,7 @@ import {
   reActiveUser,
   getAllFull,
   getProfile,
+  getTop10Users,
 } from "../controllers/users.js";
 import { verifyTokenAdmin } from "../middleware/authAdminToken.js";
 const router = express.Router();
@@ -14,6 +15,7 @@ const router = express.Router();
 //@route /api/users
 //view user profile
 router.route("/profile/:id").get(getProfile);
+router.route("/top-ten-users").get(getTop10Users);
 
 //for admin things
 router.use(verifyTokenAdmin).route("/all").get(getAll);

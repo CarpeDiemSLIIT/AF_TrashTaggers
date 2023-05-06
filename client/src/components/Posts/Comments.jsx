@@ -39,10 +39,11 @@ const CommentItem = ({ comment }) => {
         gap: "0.5rem",
         padding: "0.5rem",
         border: "1px solid #ccc",
+        borderRadius: "0.75rem",
       }}
     >
       <Avatar
-        src={comment.user.ImageURL ? comment.user.ImageURL : ""}
+        src={comment.user.imageURL ? comment.user.imageURL : ""}
         sx={{
           width: 32,
           height: 32,

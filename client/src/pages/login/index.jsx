@@ -88,6 +88,7 @@ const LoginPage = () => {
               variant="h2"
               sx={{ mb: "1.5rem" }}
               textAlign="center"
+              color={theme.palette.primary.main}
             >
               Welcome to TrashTaggers.
             </Typography>
