@@ -1,25 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import userService from "./userService";
+import reportService from "./reportService";
 import { toast } from "react-toastify";
 
 const initialState = {
-  allUsers: [],
-  allSuspendedUsers: [],
-  allUsersWithAdmin: [],
-  allUsersFull: [],
+  reports: [],
   isError: false,
   isSuccess: false,
   isLoading: false,
   message: "",
 };
 
-//Get All Active Users
-export const getAllUsers = createAsyncThunk(
-  "users/getAllUsers",
+export const getAllReports = createAsyncThunk(
+  "report/getAllReports",
   async (_, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
-      return await userService.getAllUsers(token);
+
+      return await reportService.getAllReports(token);
     } catch (error) {
       const message =
         (error.response &&
@@ -31,14 +28,17 @@ export const getAllUsers = createAsyncThunk(
     }
   }
 );
-
-//get all users active and inactive
-export const getAllUsersFull = createAsyncThunk(
-  "users/getAllUsersFull ",
-  async (_, thunkAPI) => {
+export const addNewReport = createAsyncThunk(
+  "report/addNewReport",
+  async (reportAndPid, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
-      return await userService.getAllUsersFull(token);
+      const reason = reportAndPid.reason;
+      return await reportService.addNewReport(
+        reason,
+        reportAndPid.postId,
+        token
+      );
     } catch (error) {
       const message =
         (error.response &&
@@ -51,13 +51,12 @@ export const getAllUsersFull = createAsyncThunk(
   }
 );
 
-//Get all suspended users
-export const getAllSuspendUsers = createAsyncThunk(
-  "users/getAllSuspendUsers",
-  async (_, thunkAPI) => {
+export const resolveReport = createAsyncThunk(
+  "report/resolveReport",
+  async (reportID, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
-      return await userService.getAllSuspendedUsers(token);
+      return await reportService.resolveReport(reportID, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -70,13 +69,16 @@ export const getAllSuspendUsers = createAsyncThunk(
   }
 );
 
-//Suspended users
-export const suspendUsers = createAsyncThunk(
-  "users/suspendUsers",
-  async (deleteID, thunkAPI) => {
+export const resolveReportBanCreator = createAsyncThunk(
+  "report/resolveReportBanCreator",
+  async (reportIDAndCID, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
-      return await userService.suspendUsers(token, deleteID);
+      return await reportService.resolveReportBanCreator(
+        reportIDAndCID.reportId,
+        reportIDAndCID.authorId,
+        token
+      );
     } catch (error) {
       const message =
         (error.response &&
@@ -89,13 +91,16 @@ export const suspendUsers = createAsyncThunk(
   }
 );
 
-//ReActive users
-export const reActiveUsers = createAsyncThunk(
-  "users/reActiveUsers",
-  async (deleteID, thunkAPI) => {
+export const resolveReportRemovePost = createAsyncThunk(
+  "report/resolveReportRemovePost",
+  async (reportIDAndCID, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
-      return await userService.reActiveUsers(token, deleteID);
+      return await reportService.resolveReportRemovePost(
+        reportIDAndCID.reportId,
+        reportIDAndCID.postId,
+        token
+      );
     } catch (error) {
       const message =
         (error.response &&
@@ -108,89 +113,98 @@ export const reActiveUsers = createAsyncThunk(
   }
 );
 
-const userSlice = createSlice({
-  name: "users",
+const reportSlice = createSlice({
+  name: "report",
   initialState,
   reducers: {
     reset: (state) => {
-      state = initialState;
+      state = {
+        isError: false,
+        isSuccess: false,
+        isLoading: false,
+        message: "",
+      };
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAllUsers.pending, (state) => {
+      //get all reports
+      .addCase(getAllReports.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getAllUsers.fulfilled, (state, action) => {
+      .addCase(getAllReports.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.allUsers = action.payload;
+        state.reports = action.payload;
       })
-      .addCase(getAllUsers.rejected, (state, action) => {
+      .addCase(getAllReports.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.reports = action.payload;
+      })
+      //add new post
+      .addCase(addNewReport.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addNewReport.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        toast.success("Reported ✅");
+        state.reports.push(action.payload);
+      })
+      .addCase(addNewReport.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(getAllUsersFull.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getAllUsersFull.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.allUsersFull = action.payload;
-      })
-      .addCase(getAllUsersFull.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-      })
-      .addCase(getAllSuspendUsers.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getAllSuspendUsers.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.allSuspendedUsers = action.payload;
-      })
-      .addCase(getAllSuspendUsers.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-      })
-      .addCase(suspendUsers.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(suspendUsers.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        toast.success("User is suspended ✅");
-        state.allUsers = state.allUsers.filter(
-          (user) => user._id !== action.payload._id
-        );
-      })
-      .addCase(suspendUsers.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-      })
-      .addCase(reActiveUsers.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(reActiveUsers.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        toast.success("User is re-activated ✅");
 
-        state.allSuspendedUsers = state.allSuspendedUsers.filter(
-          (user) => user._id !== action.payload._id
-        );
+      //resolve report
+      .addCase(resolveReport.pending, (state) => {
+        state.isLoading = true;
       })
-      .addCase(reActiveUsers.rejected, (state, action) => {
+      .addCase(resolveReport.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        toast.success("Report is Resolved ✅");
+        state.reports = action.payload;
+      })
+      .addCase(resolveReport.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      //resolve report ban user
+      .addCase(resolveReportBanCreator.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(resolveReportBanCreator.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        toast.success("Report is Resolved ✅");
+        state.reports = action.payload;
+      })
+      .addCase(resolveReportBanCreator.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      //resolve report remove post
+      .addCase(resolveReportRemovePost.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(resolveReportRemovePost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        toast.success("Report is Resolved ✅");
+        state.reports = action.payload;
+      })
+      .addCase(resolveReportRemovePost.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
       });
   },
 });
-export const { reset } = userSlice.actions;
-export default userSlice.reducer;
+
+export const { reset } = reportSlice.actions;
+export default reportSlice.reducer;

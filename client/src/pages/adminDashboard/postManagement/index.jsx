@@ -22,7 +22,10 @@ import Paper from "@mui/material/Paper";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllPosts } from "../../../features/posts/postSlice";
+import {
+  getAllPosts,
+  getAllPostsAdmin,
+} from "../../../features/posts/postSlice";
 import DoDisturbIcon from "@mui/icons-material/DoDisturb";
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import ApprovePost from "../../../components/confirmation/approvePost";
@@ -34,6 +37,7 @@ function Row({ post, index }) {
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [open3, setOpen3] = useState(false);
+  const [open4, setOpen4] = useState(false);
 
   const handleClose = () => {
     setOpen1(false);
@@ -45,6 +49,9 @@ function Row({ post, index }) {
 
   const handleClose3 = () => {
     setOpen3(false);
+  };
+  const handleClose4 = () => {
+    setOpen4(false);
   };
 
   return (
@@ -67,6 +74,8 @@ function Row({ post, index }) {
         <TableCell align="center">
           {post.status === "pending" ? (
             <Chip label="Pending" color="info" variant="outlined" />
+          ) : post.status === "deleted" ? (
+            <Chip label="Deleted" color="error" variant="outlined" />
           ) : (
             <Chip label="Approved" color="primary" variant="filled" />
           )}
@@ -126,7 +135,9 @@ function Row({ post, index }) {
                         color="primary"
                         title="Approve"
                         onClick={() => {
-                          if (post.status !== "approved") {
+                          if (post.status === "deleted") {
+                            setOpen4(true);
+                          } else if (post.status === "pending") {
                             setPostID(post._id);
                             setOpen1(true);
                           } else {
@@ -146,7 +157,9 @@ function Row({ post, index }) {
                         color="error"
                         title="Reject"
                         onClick={() => {
-                          if (post.status !== "approved") {
+                          if (post.status === "deleted") {
+                            setOpen4(true);
+                          } else if (post.status === "pending") {
                             setPostID(post._id);
                             setOpen2(true);
                           } else {
@@ -175,6 +188,20 @@ function Row({ post, index }) {
                           This post is already Approved ✅
                         </Alert>
                       </Snackbar>
+                      <Snackbar
+                        open={open4}
+                        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                        autoHideDuration={2000}
+                        onClose={handleClose4}
+                      >
+                        <Alert
+                          onClose={handleClose4}
+                          severity="error"
+                          sx={{ width: "100%" }}
+                        >
+                          This post is already Deleted ❌
+                        </Alert>
+                      </Snackbar>
                     </TableCell>
                   </TableRow>
                 </TableBody>
@@ -193,7 +220,7 @@ const PostManagement = () => {
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
   useEffect(() => {
-    dispatch(getAllPosts());
+    dispatch(getAllPostsAdmin());
   }, []);
   if (isLoading)
     return (

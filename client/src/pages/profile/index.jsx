@@ -1,7 +1,16 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Box, Typography, Button, Avatar, IconButton } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Button,
+  Avatar,
+  IconButton,
+  Stack,
+  useTheme,
+  Badge,
+} from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import WidgetWrapper from "../../components/customMUI/WidgetWrapper";
 import { useEffect } from "react";
@@ -10,10 +19,11 @@ import EditProfile from "./EditProfile";
 import Post from "../../components/Posts/Post";
 import { getAllPosts } from "../../features/posts/postSlice";
 import { refreshUser, reset } from "../../features/auth/authSlice.js";
-
 import RecyclingIcon from "@mui/icons-material/Recycling";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import EditProfileImage from "./EditProfileImage";
+import ChangePassword from "./ChangePassword";
 
 const Profile = () => {
   const { user } = useSelector((state) => state.auth);
@@ -22,7 +32,7 @@ const Profile = () => {
   );
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const theme = useTheme();
   const date = new Date(user.userData.dateJoined);
   const options = { year: "numeric", month: "long", day: "numeric" };
   const formattedDate = date.toLocaleDateString("en-GB", options);
@@ -78,11 +88,7 @@ const Profile = () => {
             width="100%"
             padding="0 2rem 0 0 "
           >
-            <Avatar
-              alt={firstName}
-              src={imageURL}
-              sx={{ height: "5rem", width: "5rem" }}
-            />
+            <EditProfileImage />
             <Box
               display="flex"
               alignItems="start"
@@ -114,7 +120,15 @@ const Profile = () => {
               </Typography>
             </Box>
           </Box>
-          <EditProfile />
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="end"
+            gap="0.25rem"
+          >
+            <EditProfile />
+            <ChangePassword />
+          </Box>
         </FlexBetween>
       </WidgetWrapper>
       {posts.length > 0 &&

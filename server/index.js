@@ -13,12 +13,18 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import authRouter from "./routes/auth.js";
 import usersRouter from "./routes/users.js";
 import postsRouter from "./routes/posts.js";
+import reportRouter from "./routes/report.js";
 
 import { verifyTokenUser } from "./middleware/authUserToken.js";
 import { verifyTokenAdmin } from "./middleware/authAdminToken.js";
 
 import { addNewPost, approvePost, rejectPost } from "./controllers/posts.js";
 import { updatePostImage } from "./controllers/posts.js";
+
+import { resolveReportRemovePost } from "./controllers/reports.js";
+
+import { updateImage } from "./controllers/auth.js";
+
 
 /* configurations */
 dotenv.config();
@@ -76,10 +82,19 @@ app.put(
   imageHandlingMiddleware,
   updatePostImage
 );
+// profile image update
+app.put(
+  "/api/auth/updateProfileImage",
+  verifyTokenUser,
+  uploader.single("imageURL"),
+  imageHandlingMiddleware,
+  updateImage
+);
 /* Routes */
 app.use("/api/auth", authRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/posts", postsRouter);
+app.use("/api/reports", reportRouter);
 
 //route to approve a post
 app.patch("/api/posts/approve/:id", verifyTokenAdmin, approvePost);

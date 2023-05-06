@@ -52,7 +52,7 @@ const AuthorProfile = () => {
     return () => {
       reset();
     };
-  }, []);
+  }, [userId]);
 
   if (!user && !error) {
     return (

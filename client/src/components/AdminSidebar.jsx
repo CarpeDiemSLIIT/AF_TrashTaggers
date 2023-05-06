@@ -35,7 +35,21 @@ export default function AdminSidebar() {
         url="admin-dashboard/post-management"
       />
       <Divider />
-      <Selection name="User Management" />
+
+      <Selection
+        name="Report Management "
+        url="admin-dashboard/report-management"
+      />
+      <Divider />
+      <Typography
+        fontWeight="bold"
+        fontSize="20px"
+        textAlign={"left"}
+        sx={{ marginLeft: "5%" }}
+      >
+        User Management
+      </Typography>
+
 
       <Selection
         name="&nbsp;&nbsp;&nbsp;&nbsp;Active Users "

@@ -1,8 +1,19 @@
 import axios from "axios";
+// const API_URL = "/api/posts/";
 const API_URL = "http://localhost:3001/api/posts/";
 
 const getAllPosts = async () => {
   const response = await axios.get(API_URL + "all");
+  return response.data;
+};
+
+const getAllPostsAdmin = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.get(API_URL + "all/admin",config);
   return response.data;
 };
 
@@ -115,4 +126,5 @@ export default {
   updatePostImage,
   approveNewPost,
   rejectNewPost,
+  getAllPostsAdmin,
 };

@@ -26,6 +26,26 @@ export const getAllPosts = createAsyncThunk(
     }
   }
 );
+
+export const getAllPostsAdmin = createAsyncThunk(
+  "post/getAllPostsAdmin",
+  async (_, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+
+      return await postService.getAllPostsAdmin(token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const addNewPost = createAsyncThunk(
   "post/addNewPost",
   async (post, thunkAPI) => {
@@ -213,6 +233,21 @@ const postSlice = createSlice({
         toast.error(`Error: ${action.payload}`);
         state.message = action.payload;
       })
+      //get all posts admin
+      .addCase(getAllPostsAdmin.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getAllPostsAdmin.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.posts = action.payload;
+      })
+      .addCase(getAllPostsAdmin.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        toast.error(`Error: ${action.payload}`);
+        state.message = action.payload;
+      })
       //add new post
       .addCase(addNewPost.pending, (state) => {
         state.isLoading = true;
@@ -221,7 +256,7 @@ const postSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         toast.success("Post added successfully");
-        state.posts.push(action.payload);
+        state.posts.unshift(action.payload);
       })
       .addCase(addNewPost.rejected, (state, action) => {
         state.isLoading = false;
@@ -335,6 +370,7 @@ const postSlice = createSlice({
       .addCase(approveNewPost.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
+        toast.success("Post is approved ✅");
         state.posts = action.payload;
       })
       .addCase(approveNewPost.rejected, (state, action) => {
@@ -349,6 +385,7 @@ const postSlice = createSlice({
       .addCase(rejectNewPost.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
+        toast.success("Post is rejected ✅");
         state.posts = action.payload;
       })
       .addCase(rejectNewPost.rejected, (state, action) => {
