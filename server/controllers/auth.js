@@ -25,7 +25,7 @@ export const register = async (req, res) => {
     // res.status(201).json(savedUser);
     res.status(200).json({ token, userData: savedUser });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(400).json({ error: err.message });
   }
 };
 
@@ -59,7 +59,7 @@ export const makeAdmin = async (req, res) => {
     const { _id } = req.user;
     const user = await User.findById(_id);
     if (user.role == "admin")
-      return res.status(400).json({ msg: "User already is an admin. " });
+      return res.status(400).json({ msg: "User already is an admin" });
     user.role = "admin";
     const savedUser = await user.save();
     res.status(201).json(savedUser);
@@ -73,7 +73,7 @@ export const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user) return res.status(400).json({ msg: "User does not exist." });
-    res.status(201).json(user);
+    res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
