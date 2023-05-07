@@ -11,47 +11,43 @@ const getAllEvents = async (token) => {
   return response.data;
 };
 
-const addNewEvent = async (event, token) => {
+const addNewEvent = async (cevent, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
-  const response = await axios.post(API_URL + "new", event, config);
+  const response = await axios.post(API_URL + "new", cevent, config);
   return response.data;
 };
 
 
-const deleteEvent = async (eventId, token) => {
+const deleteEvent = async (id, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  }
+  };
+  const response = await axios.delete(API_URL + `${id}`, config);
+  return response.data;
+};
 
-  const response = await axios.delete(API_URL + eventId, config)
+const updateEvent = async (post, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.put(API_URL + `${post.id}`, post, config);
 
-  return response.data
-}
+  return response.data;
+};
 
-
-const updateEvent= async (EventData, token) => {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  console.log(JSON.stringify(EventData));
-    const response = await axios.put(API_URL + EventData._id,EventData, config)
-    console.log(JSON.stringify(response));
-  
-    return response.data
-  }
 
 
 export default {
-    getAllEvents,
-    addNewEvent,
-    deleteEvent,
-    updateEvent,
+  getAllEvents,
+  addNewEvent,
+  deleteEvent,
+  updateEvent
 };

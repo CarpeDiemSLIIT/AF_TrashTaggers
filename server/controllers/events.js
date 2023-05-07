@@ -11,13 +11,14 @@ export const getAllEvents = async (req, res) => {
   };
 
   export const addNewEvent = async (req, res) => {
-    const { description, Title } = req.body;
+    const { description, Title , date } = req.body;
     const { _id } = req.user;
-    if (!description || !Title)
+    if (!description || !Title || !date)
       return res.status(400).json({ message: "Missing required fields" });
   
     const newEvent = new Event({
       description,
+      date,
       Title,
       user: _id,
     });

@@ -1,173 +1,178 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import eventService from "./eventService";
+import { toast } from "react-toastify";
 
 const initialState = {
-    events: [],
-    isError: false,
-    isSuccess: false,
-    isLoading: false,
-    message: "",
-  };
+  events: [],
+  isError: false,
+  isSuccess: false,
+  isLoading: false,
+  message: "",
+};
 
-  export const getAllEvents = createAsyncThunk(
-    "event/getAllEvents",
-    async (_, thunkAPI) => {
-      try {
-        const token = thunkAPI.getState().auth.user.token;
-        return await eventService.getAllEvents(token);   
-      } catch (error) {
-        const message =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        return thunkAPI.rejectWithValue(message);
-      }
+export const getAllEvents = createAsyncThunk(
+  "event/getAllEvents",
+  async (_, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await eventService.getAllEvents(token);      
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
     }
-  );
-
-  export const addNewEvent = createAsyncThunk(
-    "event/addNewEvent",
-    async (event, thunkAPI) => {
-      try {
-        const token = thunkAPI.getState().auth.user.token;
-        return await eventService.addNewEvent(event, token);         
-      } catch (error) {
-        const message =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        return thunkAPI.rejectWithValue(message);
-      }
+  }
+);
+export const addNewEvent = createAsyncThunk(
+  "event/addNewEvent",
+  async (post, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await eventService.addNewEvent(post, token);      
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
     }
-  );
-
-
+  }
+);
 
 export const deleteEvent = createAsyncThunk(
   "event/deleteEvent",
-  async (id, thunkAPI) => {
+  async (post, thunkAPI) => {
     try {
-      const token = thunkAPI.getState().dashAuth.user.token
-      return await eventService.deleteEvent(id, token);      
+      const token = thunkAPI.getState().auth.user.token;
+      return await EventService.deleteEvent(post, token);
     } catch (error) {
       const message =
         (error.response &&
           error.response.data &&
           error.response.data.message) ||
         error.message ||
-        error.toString()
-      return thunkAPI.rejectWithValue(message)
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
     }
   }
-)
-
-
+);
 
 export const updateEvent = createAsyncThunk(
   "event/updateEvent",
-  async (event, thunkAPI) => {
+  async (post, thunkAPI) => {
     try {
-      const token = thunkAPI.getState().dashAuth.user.token
-     
-      return await eventService.updateEvent(event, token)
+      const token = thunkAPI.getState().auth.user.token;
+      return await EventService.updateEvent(post, token);
     } catch (error) {
       const message =
         (error.response &&
           error.response.data &&
           error.response.data.message) ||
         error.message ||
-        error.toString()
-      return thunkAPI.rejectWithValue(message)
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
     }
   }
-)
+);
 
 
+// export const approvepost = createAsyncThunk(
+//   "post/approvepost",
+//   async (id, thunkAPI) => {
+//     try {
+//       const token = thunkAPI.getState().auth.user.token;
+//       return await postService.changepostStatus(id, "approved", token);
+//     } catch (error) {
+//       const message =
+//         (error.response &&
+//           error.response.data &&
+//           error.response.data.message) ||
+//         error.message ||
+//         error.toString();
+//       return thunkAPI.rejectWithValue(message);
+//     }
+//   }
+// );
 
-
-  const eventSlice = createSlice({
-    name: "events",
-    initialState,
-    reducers: {
-      reset: (state) => {
-        state = initialState;
-      },
+const eventSlice = createSlice({
+  name: "event",
+  initialState,
+  reducers: {
+    reset: (state) => {
+      state = initialState;
     },
-    extraReducers: (builder) => {
-      builder
-        .addCase(getAllEvents.pending, (state) => {
-          state.isLoading = true;
-        })
-        .addCase(getAllEvents.fulfilled, (state, action) => {
-          state.isLoading = false;
-          state.isSuccess = true;
-          state.events = action.payload;
-        })
-        .addCase(getAllEvents.rejected, (state, action) => {
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getAllEvents.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getAllEvents.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.events = action.payload;
+      })
+      .addCase(getAllEvents.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(addNewEvent.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addNewEvent.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.events.push(action.payload);
+      })
+      .addCase(addNewEvent.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+        //delete cevent
+        .addCase(deleteEvent.rejected, (state, action) => {
           state.isLoading = false;
           state.isError = true;
           state.message = action.payload;
+          toast.error(`Error: ${action.payload}`);
         })
-        .addCase(addNewEvent.pending, (state) => {
-          state.isLoading = true;
-        })
-        .addCase(addNewEvent.fulfilled, (state, action) => {
-          state.isLoading = false;
-          state.isSuccess = true;
-          state.events.push(action.payload);
-        })
-        .addCase(addNewEvent.rejected, (state, action) => {
-          state.isLoading = false;
-          state.isError = true;
-          state.message = action.payload;
-        })
-        
-        .addCase(updateEvent.pending, (state) => {
-          state.isLoading = true
-        })
-        .addCase(updateEvent.fulfilled, (state, action) => {
-          state.isLoading = false
-          state.isSuccess = true
-          state.isError = false
-          state.events = state.events.map(
-            (events) => {
-              if(events._id === action.payload._id)
-                return action.payload
-              return events
-            }
-          )
-        })
-        .addCase(updateEvent.rejected, (state, action) => {
-          state.isLoading = false
-          state.isError = true
-          
-          state.message = action.payload 
-        })
-    
-
         .addCase(deleteEvent.pending, (state) => {
-          state.isLoading = true
+          state.isLoading = true;
         })
         .addCase(deleteEvent.fulfilled, (state, action) => {
-          state.isLoading = false
-          state.isSuccess = true
+          state.isLoading = false;
+          state.isSuccess = true;
+          toast.success("Event deleted successfully");
           state.events = state.events.filter(
-            (events) => events._id !== action.payload.id
-          )
+            (event) => event._id !== action.payload._id
+          );
         })
-        .addCase(deleteEvent.rejected, (state, action) => {
-          state.isLoading = false
-          state.isError = true
-          state.message = action.payload
+        //update cevent
+        .addCase(updateEvent.pending, (state) => {
+          state.isLoading = true;
         })
-        
-        ;
-    },
-  });
+        .addCase(updateEvent.fulfilled, (state, action) => {
+          state.isLoading = false;
+          state.isSuccess = true;
+          toast.success("Event updated successfully");
+          state.events = state.events.map((event) =>
+            event._id === action.payload._id ? action.payload : event
+          );
+        })
+        .addCase(updateEvent.rejected, (state, action) => {
+          state.isLoading = false;
+          state.isError = true;
+          state.message = action.payload;
+        });
+  },
+});
 
-  export const { reset } = eventSlice.actions;
+export const { reset } = eventSlice.actions;
 export default eventSlice.reducer;
