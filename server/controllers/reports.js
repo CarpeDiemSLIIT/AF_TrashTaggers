@@ -24,7 +24,7 @@ export const addNewReport = async (req, res) => {
   });
   try {
     await newReport.save();
-    const newReportWithPopulate = await Report.find()
+    const newReportWithPopulate = await Report.findById(newReport._id)
       .populate("user")
       .populate({ path: "post", populate: { path: "author" } });
     res.status(201).json(newReportWithPopulate);
