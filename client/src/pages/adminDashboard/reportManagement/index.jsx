@@ -297,7 +297,7 @@ const ReportManagement = () => {
           </TableHead>
           <TableBody>
             {reports.length === 0 && (
-              <TableRow key={reports._id}>
+              <TableRow>
                 <TableCell colSpan={6} align="center">
                   No Reports Found
                 </TableCell>

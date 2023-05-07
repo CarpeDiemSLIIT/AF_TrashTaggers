@@ -11,16 +11,16 @@ import { verifyTokenAdmin } from "../middleware/authAdminToken.js";
 
 const router = express.Router();
 
-router.use(verifyTokenAdmin).route("/all").get(getAllReports);
-router.use(verifyTokenUser).route("/add/:pid").post(addNewReport);
-router.use(verifyTokenAdmin).route("/resolve/:pid").patch(resolveReport);
+router.route("/add/:pid").post(verifyTokenUser, addNewReport);
+router.route("/all").get(verifyTokenAdmin, getAllReports);
+router.route("/resolve/:pid").patch(verifyTokenAdmin, resolveReport);
 router
-  .use(verifyTokenAdmin)
+
   .route("/resolve/banCreator/:id")
-  .patch(resolveReportBanCreator);
+  .patch(verifyTokenAdmin, resolveReportBanCreator);
 router
-  .use(verifyTokenAdmin)
+
   .route("/resolve/removePost/:pid")
-  .patch(resolveReportRemovePost);
+  .patch(verifyTokenAdmin, resolveReportRemovePost);
 
 export default router;

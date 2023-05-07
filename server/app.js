@@ -1,6 +1,5 @@
 import express from "express";
 import bodyParser from "body-parser";
-import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import multer from "multer";
@@ -8,7 +7,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import firebase from "firebase/compat/app";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-
+import connectDB from "./config/db.js";
 // local imports
 import authRouter from "./routes/auth.js";
 import usersRouter from "./routes/users.js";
@@ -28,14 +27,13 @@ import { resolveReportRemovePost } from "./controllers/reports.js";
 
 import { updateImage } from "./controllers/auth.js";
 
-
 /* configurations */
 dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "same-origin" }));
-app.use(morgan("common"));
+// app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
@@ -116,15 +114,4 @@ app.patch("/api/posts/approve/:id", verifyTokenAdmin, approvePost);
 //route to reject a post
 app.patch("/api/posts/reject/:id", verifyTokenAdmin, rejectPost);
 
-/* Mongoose setup */
-// eslint-disable-next-line no-undef
-const PORT = process.env.PORT || 6001;
-mongoose // eslint-disable-next-line no-undef
-  .connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    app.listen(PORT, () => console.log(`Server running on port: ${PORT}`));
-  })
-  .catch((error) => console.log(`${error} did not connect`));
+export default app;
