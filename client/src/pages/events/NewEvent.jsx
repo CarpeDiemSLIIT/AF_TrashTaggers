@@ -1,3 +1,4 @@
+
 import {
     Avatar,
     Box,
@@ -32,9 +33,9 @@ import {
             setOpen(true);
           }}
         >
-          {user ? <Avatar src={user.userData.imageURL} /> : <Avatar />}
+  
           <TextField
-            label="Create your Own Event"
+            label="Lets Organize an event"
             multiline
             sx={{ width: "100%" }}
             disabled

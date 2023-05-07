@@ -34,9 +34,9 @@ import {
             setOpen(true);
           }}
         >
-          <Avatar src={user?.imageURL} />
+          {/* <Avatar src={user?.imageURL} /> */}
           <TextField
-            label="Create your Own Event"
+            label="Lets Organize Your Own Event .!!"
             multiline
             sx={{ width: "100%" }}
             disabled
