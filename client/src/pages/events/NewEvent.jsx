@@ -32,7 +32,7 @@ import {
             setOpen(true);
           }}
         >
-          <Avatar src={user?.imageURL} />
+          {user ? <Avatar src={user.userData.imageURL} /> : <Avatar />}
           <TextField
             label="Create your Own Event"
             multiline
