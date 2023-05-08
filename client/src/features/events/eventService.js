@@ -11,13 +11,13 @@ const getAllEvents = async (token) => {
   return response.data;
 };
 
-const addNewEvent = async (cevent, token) => {
+const addNewEvent = async (event, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
-  const response = await axios.post(API_URL + "new", cevent, config);
+  const response = await axios.post(API_URL + "new", event, config);
   return response.data;
 };
 

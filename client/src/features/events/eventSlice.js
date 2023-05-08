@@ -50,7 +50,7 @@ export const deleteEvent = createAsyncThunk(
   async (post, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
-      return await EventService.deleteEvent(post, token);
+      return await eventService.deleteEvent(post, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -68,7 +68,7 @@ export const updateEvent = createAsyncThunk(
   async (post, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
-      return await EventService.updateEvent(post, token);
+      return await eventService.updateEvent(post, token);
     } catch (error) {
       const message =
         (error.response &&

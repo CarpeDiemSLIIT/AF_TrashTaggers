@@ -16,12 +16,12 @@ afterAll((done) => {
 });
 
 let token = "";
-let testPostId = "";
-describe("Post Api /api/posts", () => {
+let testEventId = "";
+describe("Event Api /api/cevents", () => {
   describe("CRUD - Positive", () => {
     // it.todo("Get all posts GET /api/all");
-    it("Get all posts GET /api/all", async () => {
-      const response = await supertest(app).get("/api/posts/all");
+    it("Get all events GET /api/all", async () => {
+      const response = await supertest(app).get("/api/cevents/all");
       expect(response.statusCode).toBe(200);
       expect(response.body).toBeInstanceOf(Array);
     });
@@ -38,33 +38,27 @@ describe("Post Api /api/posts", () => {
     });
 
     // it.todo("Add new post POST /api/posts");
-    it("Add new post POST /api/posts/add", async () => {
+    it("Add new event EVENT /api/cevents/add", async () => {
       const response = await supertest(app)
-        .post("/api/posts/add")
+        .post("/api/cevents/add")
         .set("Authorization", `Bearer ${token}`)
         .field({
           description: "testDescription",
+          Title : "TestTitle",
         })
         .attach("imageURL", "_test_/testImages/testImage.jpg");
       expect(response.statusCode).toBe(201);
       expect(response.body).toHaveProperty("description");
+      expect(response.body).toHaveProperty("Title");
       expect(response.body).toHaveProperty("imageURL");
 
-      testPostId = response.body._id;
+      testEventId = response.body._id;
     });
     // it.todo("Update post PUT /api/posts/update/:id");
-    it("Update post Image PUT /api/posts/updatePostImage/:id", async () => {
+
+    it("Update event Data PUT /api/cevents/update/:id", async () => {
       const response = await supertest(app)
-        .put(`/api/posts/updatePostImage/${testPostId}`)
-        .set("Authorization", `Bearer ${token}`)
-        .attach("imageURL", "_test_/testImages/testImage.jpg");
-      expect(response.statusCode).toBe(201);
-      expect(response.body).toHaveProperty("description");
-      expect(response.body).toHaveProperty("imageURL");
-    });
-    it("Update post Data PUT /api/posts/update/:id", async () => {
-      const response = await supertest(app)
-        .put(`/api/posts/update/${testPostId}`)
+        .put(`/api/cevents/update/${testEventId}`)
         .set("Authorization", `Bearer ${token}`)
         .send({
           description: "testDescription",
@@ -74,9 +68,9 @@ describe("Post Api /api/posts", () => {
       expect(response.body).toHaveProperty("imageURL");
     });
     // it.todo("Delete post DELETE /api/posts/:id/delete");
-    it("Delete post DELETE /api/posts/:id/delete", async () => {
+    it("Delete event DELETE /api/cevents/:id/delete", async () => {
       const response = await supertest(app)
-        .delete(`/api/posts/${testPostId}/delete`)
+        .delete(`/api/cevents/${testEventId}/delete`)
         .set("Authorization", `Bearer ${token}`);
       expect(response.statusCode).toBe(200);
       expect(response.body).toBeInstanceOf(Object);
@@ -88,21 +82,5 @@ describe("Post Api /api/posts", () => {
   //   it.todo("Update post PUT /api/posts/update/:id");
   //   it.todo("Delete post DELETE /api/posts/:id/delete");
   // });
-  describe("Vote and comment", () => {
-    // it.todo("Upvote post PUT /api/posts/upvote/:id");
-    it("Upvote post PUT /api/posts/upvote/:id", async () => {
-      const response = await supertest(app)
-        .put(`/api/posts/upvote/${testPostId}`)
-        .set("Authorization", `Bearer ${token}`);
-      expect(response.statusCode).toBe(200);
-      expect(response.body).toBeInstanceOf(Object);
-    });
-    it.todo("Downvote post PUT /api/posts/downvote/:id");
-    it.todo("Add new comment POST /api/posts/:id/newComment");
-  });
-  describe("Vote and comment - Negative", () => {
-    it.todo("Upvote post PUT /api/posts/upvote/:id");
-    it.todo("Downvote post PUT /api/posts/downvote/:id");
-    it.todo("Add new comment POST /api/posts/:id/newComment");
-  });
+
 });
