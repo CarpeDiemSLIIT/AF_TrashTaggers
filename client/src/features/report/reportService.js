@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_URL = "http://localhost:3001/api/reports/";
+const API_URL = "/api/reports/";
 
 const getAllReports = async (token) => {
   const config = {

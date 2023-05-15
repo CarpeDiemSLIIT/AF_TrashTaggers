@@ -47,7 +47,7 @@ const ChangePassword = () => {
   };
   const changePassword = async (values) => {
     await axios
-      .put("http://localhost:3001/api/auth/changePassword", values, {
+      .put("/api/auth/changePassword", values, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },

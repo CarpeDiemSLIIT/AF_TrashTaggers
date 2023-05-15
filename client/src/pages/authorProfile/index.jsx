@@ -35,9 +35,7 @@ const AuthorProfile = () => {
   const navigate = useNavigate();
 
   const getUser = async () => {
-    const response = await axios.get(
-      "http://localhost:3001/api/users/profile/" + userId
-    );
+    const response = await axios.get("/api/users/profile/" + userId);
     if (response.status == 200) setUser(response.data);
     else {
       setError(response.data.message);

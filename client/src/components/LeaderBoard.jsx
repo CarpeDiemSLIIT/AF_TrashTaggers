@@ -19,7 +19,7 @@ const LeaderBoard = () => {
   const getTopTenUsers = async () => {
     //axios get the top 10 users
     await axios
-      .get("http://localhost:3001/api/users/top-ten-users")
+      .get("/api/users/top-ten-users")
       .then((response) => {
         setTopTenUsers(response.data);
       })

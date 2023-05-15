@@ -1,6 +1,6 @@
 import axios from "axios";
 // const API_URL = "/api/posts/";
-const API_URL = "http://localhost:3001/api/posts/";
+const API_URL = "/api/posts/";
 
 const getAllPosts = async () => {
   const response = await axios.get(API_URL + "all");
@@ -13,7 +13,7 @@ const getAllPostsAdmin = async (token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  const response = await axios.get(API_URL + "all/admin",config);
+  const response = await axios.get(API_URL + "all/admin", config);
   return response.data;
 };
 
