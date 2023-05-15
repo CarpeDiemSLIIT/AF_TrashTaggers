@@ -23,6 +23,7 @@ import { updatePostImage } from "./controllers/posts.js";
 import { resolveReportRemovePost } from "./controllers/reports.js";
 
 import { updateImage } from "./controllers/auth.js";
+import path from "path";
 
 /* configurations */
 dotenv.config();
@@ -99,5 +100,15 @@ app.patch("/api/posts/approve/:id", verifyTokenAdmin, approvePost);
 
 //route to reject a post
 app.patch("/api/posts/reject/:id", verifyTokenAdmin, rejectPost);
+
+if (
+  process.env.NODE_ENV === "production" ||
+  process.env.NODE_ENV === "staging"
+) {
+  app.use(express.static("client/build"));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname + "/client/dist/index.html"));
+  });
+}
 
 export default app;
