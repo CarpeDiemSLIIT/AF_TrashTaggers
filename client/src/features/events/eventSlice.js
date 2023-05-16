@@ -30,6 +30,7 @@ export const getAllEvents = createAsyncThunk(
 export const addNewEvent = createAsyncThunk(
   "event/addNewEvent",
   async (post, thunkAPI) => {
+    console.log(post);
     try {
       const token = thunkAPI.getState().auth.user.token;
       return await eventService.addNewEvent(post, token);      

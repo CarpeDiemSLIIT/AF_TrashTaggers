@@ -43,17 +43,26 @@ const NewEventForm = ({ handleClose }) => {
     };
   }, []);
 
-  const handleFormSubmit = async (values, onSubmitProps) => {
-    const formData = new FormData();
-    // for (let value in values) {
-    //   formData.append(value, values[value]);
-    // }
+  const consoleLog =  (values) =>{
+    console.log(values);
+  }
 
-    formData.append("Title", values.Title);
-    formData.append("description", values.description);
-    formData.append("date", values.date);
+  const handleFormSubmit = async (values, onSubmitProps) => {
+    consoleLog(values)
+    const formData = new FormData();
+    for (let value in values) {
+      formData.append(value, values[value]);
+    }
+
+    // formData.append("Title", values.Title);
+    // formData.append("description", values.description);
+    // formData.append("date", values.date);
+
+    console.log(formData);
+    
+    // dispatch(addNewEvent(formData));
+    dispatch(addNewEvent({Title : values.Title , description : values.description , date : values.date}));
     dispatch(reset());
-    dispatch(addNewEvent(formData));
     onSubmitProps.resetForm();
     handleClose();
   };
