@@ -41,10 +41,8 @@ import EventMenu from "./EeventMenu";
     } = user.userData;
 
 
-    const addparticipant = () => {
-
-    }
-
+    // Check if the event date is in the past
+    const isEventConcluded = new Date(event.date) < new Date();
  
     const  token   = user.token ;
 
@@ -190,20 +188,25 @@ import EventMenu from "./EeventMenu";
         
         {/* <Divider/> */}
         <Box>
-      {joined ? (
-        <center>
+    {isEventConcluded ? (
+      <center>
+        <Typography variant="body1">Event Concluded</Typography>
+      </center>
+    ) : joined ? (
+      <center>
         <Chip
           icon={<DoneIcon />}
           label="Joined"
           color="success"
           variant="outlined"
-        /></center>
-      ) : (
-        <center>
-          <Button onClick={handleJoin}>Join</Button>
-        </center>
-      )}
-    </Box>
+        />
+      </center>
+    ) : (
+      <center>
+        <Button onClick={handleJoin}>Join</Button>
+      </center>
+    )}
+  </Box>
         <Divider/>
       
   
