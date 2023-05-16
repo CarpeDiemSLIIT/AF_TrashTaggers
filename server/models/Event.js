@@ -24,10 +24,15 @@ const EventSchema = new mongoose.Schema({
     required: true,
   },
 
+  // Participant: [{
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "User",
+  //   default: [],
+  // }],
+
   Participant: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    default: [],
+    name: String, // Example participant field
+    // Other participant fields
   }],
 
   

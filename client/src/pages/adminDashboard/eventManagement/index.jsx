@@ -35,6 +35,10 @@ import DoDisturbIcon from "@mui/icons-material/DoDisturb";
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import ApprovePost from "../../../components/confirmation/approvePost";
 import RejectPost from "../../../components/confirmation/rejectPost";
+
+
+
+
 function Row({ post, index }) {
   const [open, setOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -43,8 +47,8 @@ function Row({ post, index }) {
     setIsDialogOpen(true);
   };
 
-  const handleDeleteConfirm = () => {
-    dispatch(deleteCevent(post._id));
+  const handleDeleteConfirm = (id) => {
+    dispatch(deleteCevent(id));
     setIsDialogOpen(false);
   };
 
@@ -137,7 +141,7 @@ function Row({ post, index }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteCancel}>Cancel</Button>
-          <Button onClick={handleDeleteConfirm} autoFocus>
+          <Button onClick={ () => {handleDeleteConfirm(post._id)}} autoFocus>
             Delete
           </Button>
         </DialogActions>

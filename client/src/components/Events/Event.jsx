@@ -8,7 +8,7 @@ import {
     Typography,
     useTheme,
   } from "@mui/material";
-  import React, { useState } from "react";
+  import React, { useState, useEffect } from "react";
   import { ArrowUpward, ArrowDownward } from "@mui/icons-material";
   import ReactTimeAgo from "react-time-ago";
   import { useDispatch } from "react-redux";
@@ -17,6 +17,7 @@ import {
   import ThumbDownIcon from "@mui/icons-material/ThumbDown";
   import ThumbUpIcon from "@mui/icons-material/ThumbUp";
   import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+  import axios from "axios";
 //   import PostMenu from "../Posts/PostMenu";
 // import CeventMenu from "./EventMenu";
 import EventMenu from "./EeventMenu";
@@ -30,8 +31,90 @@ import EventMenu from "./EeventMenu";
     const theme = useTheme();
     const navigate = useNavigate();
     const { user } = useSelector((state) => state.auth);
+    
+    const {
+    
+      firstName,
+  
+      lastName,
+      
+    } = user.userData;
+
+
+    const addparticipant = () => {
+
+    }
+
+ 
+    const  token   = user.token ;
+
+    const api = axios.create({
+      baseURL: "http://localhost:3001",
+    });
+
+
+    const handleJoin = () => {
+      const participantName = `${firstName} ${lastName}`;
+    
+      // Check if participant with same name already exists
+      const isParticipantAlreadyJoined = event.Participant.some(
+        (participant) => participant.name === participantName
+      );
+    
+      if (isParticipantAlreadyJoined) {
+        // Participant already joined
+        console.log(`Participant ${participantName} already joined`);
+        // Update the UI to show the "Joined" button
+        setJoined(true);
+      } else {
+        // Participant not joined yet, send API request to join
+        console.log(`Joining participant ${participantName}`);
+        api
+          .put(
+            `/api/events/participant/${event._id}`,
+            {
+              Participant: {
+                name: participantName,
+              },
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          .then((response) => {
+            console.log(response.data); // Assuming the response is a success message
+            // Update the UI or perform any additional actions after successful join
+            setJoined(true);
+          })
+          .catch((error) => {
+            console.error(error.response.data);
+            // Handle the error or display an error message
+          });
+      }
+    };
+    
+    // State to keep track of whether the user has joined or not
+    const [joined, setJoined] = useState(false);
+
+    useEffect(() => {
+      const participantName = `${firstName} ${lastName}`;
+  
+      // Check if participant with same name already exists
+      const isParticipantAlreadyJoined = event.Participant.some(
+        (participant) => participant.name === participantName
+      );
+  
+      // Update the state based on whether the user has already joined
+      setJoined(isParticipantAlreadyJoined);
+    }, [event.Participant, firstName, lastName]);
+    
+    const uniqueParticipants = [...new Set(event.Participant.map(participant => participant.name))];
 
   
+
+    
     
     
     return (
@@ -90,11 +173,37 @@ import EventMenu from "./EeventMenu";
           <Typography variant="body1">{event.description}</Typography>
           <Typography variant="body2"> On : {event.date}</Typography>
         </Box>
+
+          {/* Display unique participants */}
+          {uniqueParticipants.length > 0 && (
+          <Box>
+            <Typography variant="subtitle1">Participants:</Typography>
+            {uniqueParticipants.map((participant, index) => (
+              <Typography variant="body2" key={index}>
+                {participant}
+              </Typography>
+            ))}
+          </Box>
+        )}
+
+
+        
         {/* <Divider/> */}
         <Box>
-            <center><Button> Join</Button></center>
-          
-        </Box>
+      {joined ? (
+        <center>
+        <Chip
+          icon={<DoneIcon />}
+          label="Joined"
+          color="success"
+          variant="outlined"
+        /></center>
+      ) : (
+        <center>
+          <Button onClick={handleJoin}>Join</Button>
+        </center>
+      )}
+    </Box>
         <Divider/>
       
   
@@ -104,3 +213,4 @@ import EventMenu from "./EeventMenu";
   
   export default Event;
   
+

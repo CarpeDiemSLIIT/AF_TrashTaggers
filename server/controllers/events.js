@@ -47,6 +47,39 @@ export const getAllEvents = async (req, res) => {
   };
 
 
+
+  //add participant 
+
+  // export const Addparticipant= async (req, res) => {
+  //   const { id } = req.params;
+  //   const eventData = req.body;
+  //   try {
+  //     const event = await Event.findByIdAndUpdate(id, {$push: {Participant : eventData}});
+  //     res.status(200).json("success");
+  //   } catch (err) {
+  //     res.status(500).json({ error: err.message });
+  //   }
+  // };
+
+  export const Addparticipant = async (req, res) => {
+    const { id } = req.params;
+    const { Participant } = req.body; // Assuming Participant is a single object
+  
+    try {
+      const event = await Event.findByIdAndUpdate(id, {
+        $push: { Participant: Participant },
+      });
+  
+      res.status(200).json("success");
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  };
+  
+
+
+
+
   export const deleteEvent = async (req, res) => {
     const { id } = req.params;
   
