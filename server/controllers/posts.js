@@ -2,7 +2,6 @@ import Post from "../models/Post.js";
 import User from "../models/User.js";
 import Comment from "../models/Comment.js";
 
-
 export const getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find({
@@ -18,14 +17,14 @@ export const getAllPosts = async (req, res) => {
 };
 
 export const getAllPostsAdmin = async (req, res) => {
-  try {
-    const posts = await Post.find()
-      .populate("author")
-      .populate({ path: "comments", populate: { path: "user" } });
-    res.status(200).json(posts);
-  } catch (error) {
-    res.status(404).json({ message: error.message });
-  }
+  try {
+    const posts = await Post.find()
+      .populate("author")
+      .populate({ path: "comments", populate: { path: "user" } });
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
 };
 
 export const addNewPost = async (req, res) => {
@@ -111,7 +110,7 @@ export const deletePost = async (req, res) => {
   try {
     //verify if post exists
     const post = await Post.findById(id);
-    if (!post) return res.status(404).json({ message: "Post does not exist" });
+    if (!post) return res.status(400).json({ message: "Post does not exist" });
     //verify if user is the author of the post
     if (post.author.toString() !== _id.toString())
       return res

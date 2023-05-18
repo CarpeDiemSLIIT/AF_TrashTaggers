@@ -123,7 +123,7 @@ const downVotePost = async (req, res) => {
   const newPostWithPopulate = await Post.findById(post._id)
     .populate("author")
     .populate({ path: "comments", populate: { path: "user" } });
-  res.status(201).json(newPostWithPopulate).end();
+  res.status(200).json(newPostWithPopulate).end();
 };
 
 export { upVotePost, downVotePost };
