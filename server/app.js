@@ -13,12 +13,15 @@ import authRouter from "./routes/auth.js";
 import usersRouter from "./routes/users.js";
 import postsRouter from "./routes/posts.js";
 import reportRouter from "./routes/report.js";
+import event_router from "./routes/events.js";
+import cmpevent_router from "./routes/compevents.js";
 
 import { verifyTokenUser } from "./middleware/authUserToken.js";
 import { verifyTokenAdmin } from "./middleware/authAdminToken.js";
 
 import { addNewPost, approvePost, rejectPost } from "./controllers/posts.js";
 import { updatePostImage } from "./controllers/posts.js";
+import { addNewEvent } from "./controllers/compevents.js";
 
 import { resolveReportRemovePost } from "./controllers/reports.js";
 
@@ -80,6 +83,15 @@ app.put(
   imageHandlingMiddleware,
   updatePostImage
 );
+
+app.post(
+  "/api/compevents/new",
+  verifyTokenUser,
+  uploader.single("imageURL"),
+  imageHandlingMiddleware,
+  addNewEvent
+);
+
 // profile image update
 app.put(
   "/api/auth/updateProfileImage",
@@ -93,6 +105,8 @@ app.use("/api/auth", authRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/posts", postsRouter);
 app.use("/api/reports", reportRouter);
+app.use("/api/events", verifyTokenUser, event_router);
+app.use("/api/compevents", verifyTokenUser, cmpevent_router);
 
 //route to approve a post
 app.patch("/api/posts/approve/:id", verifyTokenAdmin, approvePost);

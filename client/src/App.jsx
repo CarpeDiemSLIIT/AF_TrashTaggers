@@ -16,6 +16,8 @@ import Register from "./pages/register";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
 import ru from "javascript-time-ago/locale/ru.json";
+import Join from "./pages/join";
+import MyEvents from "./pages/events/MyEvents";
 
 //admin dashboard
 import AdminDashboard from "./pages/adminDashboard";
@@ -81,8 +83,11 @@ function App() {
                 <Route path="event-management" element={<EventManagement />} />
               </Route>
               <Route path="events" element={<Events />} />
+              <Route path="join" element={<Join />} />
+              <Route path="myevents" element={<MyEvents />} />
               <Route path="" element={<Feed />} />
             </Route>
+            
             {/* <Route path="*" element={<Navigate to="/" />} /> */}
           </Routes>
         </ThemeProvider>

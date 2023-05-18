@@ -7,31 +7,34 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import NewEvent from "./NewEvent";
+import NewEvent from "./newEvent";
 import WidgetWrapper from "../../components/customMUI/WidgetWrapper";
-import { getAllCevents , reset } from "../../features/cevents/ceventSlice";
+import { getAllEvents , reset } from "../../features/events/eventSlice";
 import { useSelector, useDispatch } from "react-redux";
-import NewCevent from "./newCevent";
-import Cevent from "../../components/Events/Cevent";
+// import NewCevent from "./newCevent";
+// import Cevent from "../../components/Events/Cevent";
+import Event from "../../components/Events/Event";
 
 
 
-const Event = () => {
+
+const Join = () => {
 
 //TODO : Get event Data and map down
 
 const dispatch = useDispatch();
-  const { cevents, isError, message, isSuccess, isLoading } = useSelector(
-    (state) => state.cevent
-  );
+const { events, isError, message, isSuccess, isLoading } = useSelector(
+    (state) => state.event
+);
   useEffect(() => {
-    dispatch(getAllCevents());
+    dispatch(getAllEvents());
     return () => {
       reset();
     };
   }, []);
 
   const theme = useTheme();
+  
 
   return(
     
@@ -44,11 +47,14 @@ const dispatch = useDispatch();
           borderRadius: "0.75rem",
         }}
       >
-        <NewCevent />
+        <NewEvent />
       </Box>
-    {cevents.map((cevent) => <Cevent event={cevent} key={cevent._id} />)}
+    {events.map((event) => <Event event={event} key={event._id} />)}
+    <Box display="flex" flexDirection="column" gap="1rem">
+
+    </Box>
   </Box>
   ); 
 };
 
-export default Event;
+export default Join;

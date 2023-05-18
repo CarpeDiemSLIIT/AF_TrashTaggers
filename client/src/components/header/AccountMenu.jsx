@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import SnowshoeingIcon from '@mui/icons-material/Snowshoeing';
 
 import Logout from "@mui/icons-material/Logout";
 import { useDispatch, useSelector } from "react-redux";
@@ -113,6 +114,15 @@ export default function AccountMenu() {
         >
           <CalendarMonthIcon sx={{ width: 32, height: 32, padding: "3px" }} />
           Events
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            navigate("/myevents");
+            handleClose();
+          }}
+        >
+          <SnowshoeingIcon sx={{ width: 32, height: 32, padding: "3px" }} />
+           My Events
         </MenuItem>
 
         <Divider />
