@@ -35,11 +35,15 @@ import DoDisturbIcon from "@mui/icons-material/DoDisturb";
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import ApprovePost from "../../../components/confirmation/approvePost";
 import RejectPost from "../../../components/confirmation/rejectPost";
+\
+
 
 
 
 
 function Row({ post, index }) {
+
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
